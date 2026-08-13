@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Спортивный прицел — DayZ - Оружие</title>
+<title>Сравнение оружия — DayZ - Оружие</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 :root{
@@ -163,42 +163,105 @@ footer.site{text-align:center; color:var(--muted); font-size:.8rem; padding:20px
 </head>
 <body>
 <header class="site">
-  <h1>Спортивный прицел</h1>
-  <div class="sub">DayZ - Оружие · Модуль / приспособление</div>
+  <h1>Сравнение оружия</h1>
+  <div class="sub">DayZ - Оружие</div>
 </header>
 <div class="container">
-  <a class="back-link" href="../index.html">← Ко всему списку оружия</a>
+  <a class="back-link" href="index.html">← Ко всему списку оружия</a>
 
-  <div class="module-hero">
-    <img src="../images/1744726555_3_dd0e2da840.png" alt="Спортивный прицел">
-    <div>
-      <div class="cat-badge">🎯 Прицелы</div>
-      <h1 style="font-size:1.4rem; margin-top:8px;">Спортивный прицел</h1>
-      <div class="desc" style="color:var(--muted); max-width:560px; margin-top:8px;">Охотничий прицел с 2-кратным увеличением. Прицельная сетка с подсветкой на батарейках обеспечивает простую и..</div>
-      <table class="info-table" style="margin-top:14px; max-width:340px;">
-        <tr><td>Вес</td><td>0.5 кг</td></tr>
-        <tr><td>Размер</td><td>1х3</td></tr>
-      </table>
-    </div>
+  <div class="compare-picker">
+    <select id="pickA"><option value="">Оружие 1...</option></select>
+    <span style="color:var(--accent); font-weight:700;">vs</span>
+    <select id="pickB"><option value="">Оружие 2...</option></select>
   </div>
 
-  <div class="section">
-    <h2>🔗 Совместимо с оружием (5)</h2>
-    <div class="compat-list">
-      
-      <a class="compat-chip" href="../weapons/blaze-1062.html">BLAZE</a>
-      
-      <a class="compat-chip" href="../weapons/cr-527-917.html">CR-527</a>
-      
-      <a class="compat-chip" href="../weapons/cr-550-savanna-1673.html">CR-550 Savanna</a>
-      
-      <a class="compat-chip" href="../weapons/m70-tundra-918.html">M70 Tundra</a>
-      
-      <a class="compat-chip" href="../weapons/sporter-22-1212.html">Sporter 22</a>
-      
-    </div>
-  </div>
+  <div id="compareRoot"></div>
 </div>
 <footer class="site">Created by Dena</footer>
+<script src="data.js"></script>
+<script>
+function qs(name){
+  var m = new RegExp('[?&]'+name+'=([^&]*)').exec(window.location.search);
+  return m ? decodeURIComponent(m[1]) : '';
+}
+var byId = {};
+WEAPONS_COMPARE_DATA.forEach(function(w){ byId[w.slug] = w; });
+
+var pickA = document.getElementById('pickA');
+var pickB = document.getElementById('pickB');
+WEAPONS_COMPARE_DATA.forEach(function(w){
+  var o1 = document.createElement('option'); o1.value = w.slug; o1.textContent = w.name; pickA.appendChild(o1);
+  var o2 = document.createElement('option'); o2.value = w.slug; o2.textContent = w.name; pickB.appendChild(o2);
+});
+
+var slugA = qs('a'), slugB = qs('b');
+pickA.value = slugA; pickB.value = slugB;
+
+function navigate(){
+  var a = pickA.value, b = pickB.value;
+  if(a && b){ window.location.href = 'compare.html?a='+a+'&b='+b; }
+}
+pickA.addEventListener('change', navigate);
+pickB.addEventListener('change', navigate);
+
+function combinedRows(w){
+  return (w.info || []).concat(w.characteristics || []);
+}
+
+function render(){
+  var root = document.getElementById('compareRoot');
+  var a = byId[slugA], b = byId[slugB];
+  if(!a || !b){
+    root.innerHTML = '<p style="color:var(--muted);">Выберите два вида оружия для сравнения.</p>';
+    return;
+  }
+  var rowsA = combinedRows(a), rowsB = combinedRows(b);
+  var mapA = {}; rowsA.forEach(function(p){ mapA[p[0]] = p[1]; });
+  var mapB = {}; rowsB.forEach(function(p){ mapB[p[0]] = p[1]; });
+  var labels = [];
+  rowsA.forEach(function(p){ if(labels.indexOf(p[0]) === -1) labels.push(p[0]); });
+  rowsB.forEach(function(p){ if(labels.indexOf(p[0]) === -1) labels.push(p[0]); });
+
+  var html = '';
+  html += '<div class="compare-heads">';
+  html += '<div class="compare-head"><img src="'+(a.thumb ? 'images/'+a.thumb : '')+'" alt=""><h2><a href="weapons/'+a.slug+'.html">'+a.name+'</a></h2><span class="cat-badge">'+a.category+'</span></div>';
+  html += '<div class="compare-vs">VS</div>';
+  html += '<div class="compare-head"><img src="'+(b.thumb ? 'images/'+b.thumb : '')+'" alt=""><h2><a href="weapons/'+b.slug+'.html">'+b.name+'</a></h2><span class="cat-badge">'+b.category+'</span></div>';
+  html += '</div>';
+
+  html += '<table class="compare-table"><tr><th>Характеристика</th><th>'+a.name+'</th><th>'+b.name+'</th></tr>';
+  labels.forEach(function(label){
+    var va = mapA.hasOwnProperty(label) ? mapA[label] : '—';
+    var vb = mapB.hasOwnProperty(label) ? mapB[label] : '—';
+    html += '<tr><td>'+label+'</td><td>'+va+'</td><td>'+vb+'</td></tr>';
+  });
+  html += '</table>';
+
+  var modA = a.modules || {}, modB = b.modules || {};
+  var sections = [];
+  Object.keys(modA).forEach(function(s){ if(sections.indexOf(s) === -1) sections.push(s); });
+  Object.keys(modB).forEach(function(s){ if(sections.indexOf(s) === -1) sections.push(s); });
+
+  function renderModList(items){
+    if(!items || !items.length) return '<span style="color:var(--muted);">—</span>';
+    return '<div class="compare-modlist">' + items.map(function(it){
+      return '<a href="modules/'+it.slug+'.html">'+it.name+'</a>';
+    }).join('') + '</div>';
+  }
+
+  if(sections.length){
+    html += '<h2 style="font-size:1.05rem; color:var(--accent); border-bottom:1px solid var(--border); padding-bottom:8px; margin:26px 0 12px;">🧰 Обвес и модули</h2>';
+    html += '<table class="compare-table"><tr><th>Категория</th><th>'+a.name+'</th><th>'+b.name+'</th></tr>';
+    var icons = {"Ремонт":"🔧","Калибр":"🔘","Прицелы":"🎯","Приклады":"🪵","Дополнительные модули":"🧩","Магазины":"📦","Дульные модули":"🔫","Цевья":"🖐"};
+    sections.forEach(function(section){
+      html += '<tr><td>'+(icons[section] || '•')+' '+section+'</td><td>'+renderModList(modA[section])+'</td><td>'+renderModList(modB[section])+'</td></tr>';
+    });
+    html += '</table>';
+  }
+
+  root.innerHTML = html;
+}
+render();
+</script>
 </body>
 </html>

@@ -77,6 +77,42 @@ table.weapon-list tr:hover td{background:#26261b;}
 .weapon-meta h1{margin:0 0 6px; font-size:1.9rem;}
 .weapon-meta .cat-badge{margin-bottom:10px;}
 .weapon-meta .desc{color:var(--muted); margin-top:10px; max-width:640px;}
+.compare-box{margin-top:16px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.compare-box label{color:var(--accent); font-size:.9rem;}
+.compare-box select{
+  background:var(--panel); border:1px solid var(--border); color:var(--text);
+  padding:7px 12px; border-radius:6px; font-size:.9rem; min-width:220px;
+}
+
+/* compare page */
+.compare-heads{display:flex; gap:20px; max-width:900px; margin-bottom:24px; align-items:flex-end;}
+.compare-head{
+  flex:1; min-width:0; background:var(--panel); border:1px solid var(--border);
+  border-radius:10px; padding:14px; text-align:center;
+}
+.compare-head img{width:110px; height:110px; object-fit:contain; background:#0f0f0c; border-radius:8px; padding:8px; margin-bottom:8px;}
+.compare-head h2{margin:6px 0 4px; font-size:1.2rem;}
+.compare-vs{
+  display:flex; align-items:center; justify-content:center; font-size:1.4rem;
+  color:var(--accent); font-weight:700; padding-bottom:40px; min-width:30px;
+}
+.compare-swap{
+  display:block; margin:0 auto 24px; background:var(--panel); border:1px solid var(--border);
+  color:var(--link); padding:8px 16px; border-radius:6px; cursor:pointer; font-size:.85rem;
+}
+table.compare-table{width:100%; max-width:900px; border-collapse:collapse; background:var(--panel); border-radius:6px; overflow:hidden;}
+table.compare-table th{text-align:left; padding:10px 14px; background:#26261d; font-size:.85rem; color:var(--accent);}
+table.compare-table td{padding:9px 14px; border-bottom:1px solid var(--border); font-size:.93rem;}
+table.compare-table td:first-child{color:var(--muted); width:34%;}
+table.compare-table td.better{color:var(--accent2); font-weight:600;}
+table.compare-table tr:last-child td{border-bottom:none;}
+.compare-modlist{display:flex; flex-direction:column; gap:4px;}
+.compare-modlist a{font-size:.9rem;}
+.compare-picker{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:22px; align-items:center;}
+.compare-picker select{
+  background:var(--panel); border:1px solid var(--border); color:var(--text);
+  padding:7px 12px; border-radius:6px; font-size:.9rem; min-width:220px;
+}
 
 .section{margin-bottom:26px;}
 .section h2{
@@ -145,6 +181,223 @@ footer.site{text-align:center; color:var(--muted); font-size:.8rem; padding:20px
       <div class="cat-badge">Пистолеты</div>
       <h1 style="font-size:1.4rem; margin-top:8px;">Сигнальный пистолет</h1>
       <div class="desc">Простой сигнальный пистолет. Запускает сигнальные ракеты на большие расстояния, он может быть удобным инструментом для связи, ориентации или просто освещения. Использует специальный сигнальный патрон.</div>
+      <div class="compare-box">
+        <label for="compareSelect">⚖️ Сравнить с:</label>
+        <select id="compareSelect" onchange="if(this.value){ window.location.href='../compare.html?a=сигнальный-пистолет-1283&b='+this.value; }">
+          <option value="">Выбрать оружие...</option>
+          
+            
+            <option value="aur-a1-1593">AUR A1</option>
+            
+          
+            
+            <option value="aur-ax-1594">AUR AX</option>
+            
+          
+            
+            <option value="blaze-1062">BLAZE</option>
+            
+          
+            
+            <option value="cr-527-917">CR-527</option>
+            
+          
+            
+            <option value="cr-550-savanna-1673">CR-550 Savanna</option>
+            
+          
+            
+            <option value="cr-61-904">CR-61</option>
+            
+          
+            
+            <option value="cr-75-900">CR-75</option>
+            
+          
+            
+            <option value="deagle-1255">DEAGLE</option>
+            
+          
+            
+            <option value="dmr-2099">DMR</option>
+            
+          
+            
+            <option value="fx-45-901">FX-45</option>
+            
+          
+            
+            <option value="kolt-1911-1054">KOLT 1911</option>
+            
+          
+            
+            <option value="lar-909">LAR</option>
+            
+          
+            
+            <option value="le-mas-1556">LE-MAS</option>
+            
+          
+            
+            <option value="longhorn-1675">Longhorn</option>
+            
+          
+            
+            <option value="m4a1-908">M4A1</option>
+            
+          
+            
+            <option value="m70-tundra-918">M70 Tundra</option>
+            
+          
+            
+            <option value="mk-ii-943">MK II</option>
+            
+          
+            
+            <option value="mlock-91-945">MLOCK-91</option>
+            
+          
+            
+            <option value="p1-1674">P1</option>
+            
+          
+            
+            <option value="pioneer-1456">Pioneer</option>
+            
+          
+            
+            <option value="r12-2783">R12</option>
+            
+          
+            
+            <option value="rak-37-2765">RAK-37</option>
+            
+          
+            
+            <option value="scr-17-2976">SCR 17</option>
+            
+          
+            
+            <option value="sg5-k-902">SG5-K</option>
+            
+          
+            
+            <option value="ssg-82-1759">SSG 82</option>
+            
+          
+            
+            <option value="sporter-22-1212">Sporter 22</option>
+            
+          
+            
+            <option value="usg-45-903">USG-45</option>
+            
+          
+            
+            <option value="арбалет-1885">Арбалет</option>
+            
+          
+            
+            <option value="бк-12-1763">БК-12</option>
+            
+          
+            
+            <option value="бк-133-920">БК-133</option>
+            
+          
+            
+            <option value="бк-18-919">БК-18</option>
+            
+          
+            
+            <option value="бк-43-1061">БК-43</option>
+            
+          
+            
+            <option value="бизон-1621">Бизон</option>
+            
+          
+            
+            <option value="вс-89-2224">ВС-89</option>
+            
+          
+            
+            <option value="всд-2677">ВСД</option>
+            
+          
+            
+            <option value="всд-913">ВСД</option>
+            
+          
+            
+            <option value="всс-910">ВСС</option>
+            
+          
+            
+            <option value="вайга-1056">Вайга</option>
+            
+          
+            
+            <option value="винтовка-мосин-91-30-914">Винтовка Мосин 91/30</option>
+            
+          
+            
+            <option value="вихрь-2142">Вихрь</option>
+            
+          
+            
+            <option value="гранатомет-м79-1711">Гранатомет М79</option>
+            
+          
+            
+            <option value="дерринджер-1717">Дерринджер</option>
+            
+          
+            
+            <option value="иж-70-898">ИЖ-70</option>
+            
+          
+            
+            <option value="ка-101-907">КА-101</option>
+            
+          
+            
+            <option value="ка-74-906">КА-74</option>
+            
+          
+            
+            <option value="ка-м-905">КА-М</option>
+            
+          
+            
+            <option value="кас-74у-939">КАС-74У</option>
+            
+          
+            
+            <option value="карабин-с-магазином-1124">Карабин с магазином</option>
+            
+          
+            
+            <option value="м16-а2-1530">М16-А2</option>
+            
+          
+            
+            <option value="револьвер-магнум-1254">Револьвер Магнум</option>
+            
+          
+            
+            <option value="свал-1442">СВАЛ</option>
+            
+          
+            
+            <option value="ск-59-66-916">СК 59/66</option>
+            
+          
+            
+          
+        </select>
+      </div>
     </div>
   </div>
 

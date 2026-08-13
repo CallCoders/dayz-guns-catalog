@@ -77,6 +77,42 @@ table.weapon-list tr:hover td{background:#26261b;}
 .weapon-meta h1{margin:0 0 6px; font-size:1.9rem;}
 .weapon-meta .cat-badge{margin-bottom:10px;}
 .weapon-meta .desc{color:var(--muted); margin-top:10px; max-width:640px;}
+.compare-box{margin-top:16px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.compare-box label{color:var(--accent); font-size:.9rem;}
+.compare-box select{
+  background:var(--panel); border:1px solid var(--border); color:var(--text);
+  padding:7px 12px; border-radius:6px; font-size:.9rem; min-width:220px;
+}
+
+/* compare page */
+.compare-heads{display:flex; gap:20px; max-width:900px; margin-bottom:24px; align-items:flex-end;}
+.compare-head{
+  flex:1; min-width:0; background:var(--panel); border:1px solid var(--border);
+  border-radius:10px; padding:14px; text-align:center;
+}
+.compare-head img{width:110px; height:110px; object-fit:contain; background:#0f0f0c; border-radius:8px; padding:8px; margin-bottom:8px;}
+.compare-head h2{margin:6px 0 4px; font-size:1.2rem;}
+.compare-vs{
+  display:flex; align-items:center; justify-content:center; font-size:1.4rem;
+  color:var(--accent); font-weight:700; padding-bottom:40px; min-width:30px;
+}
+.compare-swap{
+  display:block; margin:0 auto 24px; background:var(--panel); border:1px solid var(--border);
+  color:var(--link); padding:8px 16px; border-radius:6px; cursor:pointer; font-size:.85rem;
+}
+table.compare-table{width:100%; max-width:900px; border-collapse:collapse; background:var(--panel); border-radius:6px; overflow:hidden;}
+table.compare-table th{text-align:left; padding:10px 14px; background:#26261d; font-size:.85rem; color:var(--accent);}
+table.compare-table td{padding:9px 14px; border-bottom:1px solid var(--border); font-size:.93rem;}
+table.compare-table td:first-child{color:var(--muted); width:34%;}
+table.compare-table td.better{color:var(--accent2); font-weight:600;}
+table.compare-table tr:last-child td{border-bottom:none;}
+.compare-modlist{display:flex; flex-direction:column; gap:4px;}
+.compare-modlist a{font-size:.9rem;}
+.compare-picker{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:22px; align-items:center;}
+.compare-picker select{
+  background:var(--panel); border:1px solid var(--border); color:var(--text);
+  padding:7px 12px; border-radius:6px; font-size:.9rem; min-width:220px;
+}
 
 .section{margin-bottom:26px;}
 .section h2{
