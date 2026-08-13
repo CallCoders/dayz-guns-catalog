@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>DayZ Паляниця — Оружие</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#14140f; --bg2:#1c1c15; --panel:#20201a; --border:#3a3a2c;
+  --text:#e8e4d8; --muted:#a9a495; --accent:#c9a24b; --accent2:#7a8f5c;
+  --danger:#b5493f; --link:#d9b96a;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"Segoe UI",Roboto,Arial,sans-serif; line-height:1.5;
+}
+a{color:var(--link); text-decoration:none;}
+a:hover{text-decoration:underline;}
+header.site{
+  background:linear-gradient(180deg,#22221a,#181812);
+  border-bottom:2px solid var(--border);
+  padding:22px 28px;
+}
+header.site h1{margin:0; font-size:1.6rem; letter-spacing:.5px;}
+header.site .sub{color:var(--muted); font-size:.9rem; margin-top:4px;}
+.container{max-width:1200px; margin:0 auto; padding:24px 20px 60px;}
+.back-link{display:inline-block; margin-bottom:16px; color:var(--muted); font-size:.9rem;}
+.back-link:hover{color:var(--link);}
+
+/* index table */
+.controls{display:flex; gap:12px; align-items:center; margin-bottom:16px; flex-wrap:wrap;}
+.controls input[type=text]{
+  background:var(--panel); border:1px solid var(--border); color:var(--text);
+  padding:8px 12px; border-radius:6px; font-size:.95rem; min-width:240px;
+}
+.controls .count{color:var(--muted); font-size:.85rem;}
+.cat-filter{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;}
+.cat-filter .chip{
+  background:var(--panel); border:1px solid var(--border); color:var(--muted);
+  padding:6px 14px; border-radius:20px; font-size:.85rem; cursor:pointer; user-select:none;
+  transition:all .15s;
+}
+.cat-filter .chip:hover{border-color:var(--accent); color:var(--text);}
+.cat-filter .chip.active{background:var(--accent); border-color:var(--accent); color:#1a1a12; font-weight:600;}
+table.weapon-list{width:100%; border-collapse:collapse; background:var(--panel); border-radius:8px; overflow:hidden;}
+table.weapon-list th{
+  text-align:left; padding:12px 14px; background:#26261d; border-bottom:2px solid var(--border);
+  cursor:pointer; user-select:none; font-size:.9rem; white-space:nowrap; color:var(--accent);
+}
+table.weapon-list th .arrow{opacity:.4; font-size:.75em; margin-left:4px;}
+table.weapon-list th.sorted .arrow{opacity:1;}
+table.weapon-list td{padding:10px 14px; border-bottom:1px solid var(--border); font-size:.95rem;}
+table.weapon-list tr:hover td{background:#26261b;}
+.row-thumb{width:38px; height:38px; object-fit:contain; vertical-align:middle; margin-right:10px; background:#0f0f0c; border-radius:4px; border:1px solid var(--border);}
+.name-cell{display:flex; align-items:center;}
+.cat-badge{
+  display:inline-block; padding:2px 9px; border-radius:20px; font-size:.78rem;
+  background:#2c2c20; border:1px solid var(--border); color:var(--muted);
+}
+.dmg{color:var(--danger); font-variant-numeric:tabular-nums; font-weight:600;}
+
+/* weapon detail page */
+.weapon-hero{display:flex; gap:24px; flex-wrap:wrap; margin-bottom:28px;}
+.gallery{display:flex; flex-direction:column; gap:10px;}
+.gallery .main-shot{
+  width:494px; max-width:100%; height:494px; object-fit:contain; background:var(--panel);
+  border:1px solid var(--border); border-radius:10px; padding:14px;
+}
+.gallery .thumbs{display:flex; gap:8px; flex-wrap:wrap;}
+.gallery .thumbs img{
+  width:76px; height:76px; object-fit:contain; background:var(--panel);
+  border:1px solid var(--border); border-radius:6px; padding:6px; cursor:pointer;
+}
+.gallery .thumbs img:hover{border-color:var(--accent);}
+.weapon-meta{flex:1; min-width:260px;}
+.weapon-meta h1{margin:0 0 6px; font-size:1.9rem;}
+.weapon-meta .cat-badge{margin-bottom:10px;}
+.weapon-meta .desc{color:var(--muted); margin-top:10px; max-width:640px;}
+
+.section{margin-bottom:26px;}
+.section h2{
+  font-size:1.05rem; color:var(--accent); border-bottom:1px solid var(--border);
+  padding-bottom:8px; margin-bottom:12px; display:flex; align-items:center; gap:8px;
+}
+table.info-table{width:100%; max-width:640px; border-collapse:collapse; background:var(--panel); border-radius:6px; overflow:hidden;}
+table.info-table td{padding:9px 14px; border-bottom:1px solid var(--border); font-size:.93rem;}
+table.info-table td:first-child{color:var(--muted); width:55%;}
+table.info-table tr:last-child td{border-bottom:none;}
+
+table.economy-table{width:100%; max-width:900px; border-collapse:collapse; background:var(--panel); border-radius:6px; overflow:hidden;}
+table.economy-table th{text-align:left; padding:9px 14px; background:#26261d; font-size:.85rem; color:var(--accent);}
+table.economy-table td{padding:9px 14px; border-bottom:1px solid var(--border); font-size:.9rem;}
+table.economy-table tr:last-child td{border-bottom:none;}
+
+.module-grid{display:flex; flex-wrap:wrap; gap:14px;}
+a.module-card{
+  background:var(--panel); border:1px solid var(--border); border-radius:8px;
+  padding:12px; width:190px; display:flex; flex-direction:column; gap:6px;
+  color:var(--text); text-decoration:none; transition:border-color .15s;
+}
+a.module-card:hover{border-color:var(--accent); text-decoration:none;}
+.module-card img{
+  width:100%; height:90px; object-fit:contain; background:#0f0f0c; border-radius:6px;
+}
+.module-card .m-name{font-size:.88rem; font-weight:600; color:var(--link);}
+.module-card .m-desc{font-size:.78rem; color:var(--muted); flex:1;}
+.module-card .m-stats{font-size:.76rem; color:var(--accent2);}
+
+/* module (attachment) detail page */
+.module-hero{display:flex; gap:24px; flex-wrap:wrap; margin-bottom:28px; align-items:flex-start;}
+.module-hero img{
+  width:240px; height:240px; object-fit:contain; background:var(--panel);
+  border:1px solid var(--border); border-radius:10px; padding:14px;
+}
+.compat-list{display:flex; flex-wrap:wrap; gap:10px;}
+.compat-chip{
+  display:flex; align-items:center; gap:8px; background:var(--panel);
+  border:1px solid var(--border); border-radius:20px; padding:6px 14px 6px 6px;
+  color:var(--text); font-size:.9rem;
+}
+.compat-chip:hover{border-color:var(--accent); text-decoration:none;}
+.compat-chip img{width:28px; height:28px; object-fit:contain; border-radius:50%; background:#0f0f0c;}
+
+footer.site{text-align:center; color:var(--muted); font-size:.8rem; padding:20px; border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+<header class="site">
+  <h1>DayZ Паляниця — Каталог оружия</h1>
+  <div class="sub">53 единиц оружия и метательного/гранатометов</div>
+</header>
+<div class="container">
+  <div class="cat-filter">
+    <span class="chip active" data-cat="all">Все (53)</span>
+    
+    <span class="chip" data-cat="Автоматические винтовки">Автоматические винтовки</span>
+    
+    <span class="chip" data-cat="Винтовки">Винтовки</span>
+    
+    <span class="chip" data-cat="Гранатометы">Гранатометы</span>
+    
+    <span class="chip" data-cat="Дробовики">Дробовики</span>
+    
+    <span class="chip" data-cat="Метательное">Метательное</span>
+    
+    <span class="chip" data-cat="Пистолеты">Пистолеты</span>
+    
+    <span class="chip" data-cat="Пистолеты-пулеметы">Пистолеты-пулеметы</span>
+    
+  </div>
+  <div class="controls">
+    <input type="text" id="search" placeholder="Поиск по названию или категории...">
+    <span class="count">Показано: <span id="count">53 з 53</span></span>
+  </div>
+  <table class="weapon-list">
+    <thead>
+      <tr>
+        <th data-key="name" data-type="text">Название <span class="arrow">▾</span></th>
+        <th data-key="category" data-type="text">Категория <span class="arrow">▾</span></th>
+        <th data-key="damage" data-type="num">Урон <span class="arrow">▾</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr data-name="AUR A1" data-category="Автоматические винтовки" data-damage="-91.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1636050523_shtaur-aug_7d4f537ff2.png" alt="">
+            <a href="weapons/aur-a1-1593.html">AUR A1</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-91 / 100</td>
+      </tr>
+      
+      <tr data-name="AUR AX" data-category="Автоматические винтовки" data-damage="-107.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1676922307_1636050882_aug-a3_2d15d5078f.png" alt="">
+            <a href="weapons/aur-ax-1594.html">AUR AX</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-107 / 100</td>
+      </tr>
+      
+      <tr data-name="BLAZE" data-category="Винтовки" data-damage="-143.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677169025_1572645411_bleyzer_b81eba0dd1.png" alt="">
+            <a href="weapons/blaze-1062.html">BLAZE</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-143 / 100</td>
+      </tr>
+      
+      <tr data-name="CR-527" data-category="Винтовки" data-damage="-109.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1565262947_800px-cr527wood_65b966fe5c.png" alt="">
+            <a href="weapons/cr-527-917.html">CR-527</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-109 / 100</td>
+      </tr>
+      
+      <tr data-name="CR-550 Savanna" data-category="Винтовки" data-damage="-149.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677099208_1648061330_cr550_d1e698f6fe.png" alt="">
+            <a href="weapons/cr-550-savanna-1673.html">CR-550 Savanna</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-149 / 100</td>
+      </tr>
+      
+      <tr data-name="CR-61" data-category="Пистолеты-пулеметы" data-damage="-35.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/dayz-cz61_55769fa4dd.png" alt="">
+            <a href="weapons/cr-61-904.html">CR-61</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты-пулеметы</span></td>
+        <td class="dmg">-35 / 100</td>
+      </tr>
+      
+      <tr data-name="CR-75" data-category="Пистолеты" data-damage="-38.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1693509492_1_4599ac1c96.png" alt="">
+            <a href="weapons/cr-75-900.html">CR-75</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты</span></td>
+        <td class="dmg">-38 / 100</td>
+      </tr>
+      
+      <tr data-name="DEAGLE" data-category="Пистолеты" data-damage="-64.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677264862_1597876553_digl_0a67872e60.png" alt="">
+            <a href="weapons/deagle-1255.html">DEAGLE</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты</span></td>
+        <td class="dmg">-64 / 100</td>
+      </tr>
+      
+      <tr data-name="DMR" data-category="Винтовки" data-damage="-149.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/dmr-m14_5e9113da28.png" alt="">
+            <a href="weapons/dmr-2099.html">DMR</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-149 / 100</td>
+      </tr>
+      
+      <tr data-name="FX-45" data-category="Пистолеты" data-damage="-35.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1693513021_6_7f5d98db75.png" alt="">
+            <a href="weapons/fx-45-901.html">FX-45</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты</span></td>
+        <td class="dmg">-35 / 100</td>
+      </tr>
+      
+      <tr data-name="KOLT 1911" data-category="Пистолеты" data-damage="-35.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677357162_1572644455_kolt_e12d3ffc4b.png" alt="">
+            <a href="weapons/kolt-1911-1054.html">KOLT 1911</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты</span></td>
+        <td class="dmg">-35 / 100</td>
+      </tr>
+      
+      <tr data-name="LAR" data-category="Автоматические винтовки" data-damage="-122.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677010683_1564598428_800px-fn_fal_59a50d8dc1.png" alt="">
+            <a href="weapons/lar-909.html">LAR</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-122 / 100</td>
+      </tr>
+      
+      <tr data-name="LE-MAS" data-category="Автоматические винтовки" data-damage="-107.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1630609468_famas-1_7f305435ff.png" alt="">
+            <a href="weapons/le-mas-1556.html">LE-MAS</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-107 / 100</td>
+      </tr>
+      
+      <tr data-name="Longhorn" data-category="Пистолеты" data-damage="-109.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677262997_1648061948_longhorn_7181cb8177.png" alt="">
+            <a href="weapons/longhorn-1675.html">Longhorn</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты</span></td>
+        <td class="dmg">-109 / 100</td>
+      </tr>
+      
+      <tr data-name="M4A1" data-category="Автоматические винтовки" data-damage="-96.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677011885_1564596690_800px-m4a1_e8a2dc5a18.png" alt="">
+            <a href="weapons/m4a1-908.html">M4A1</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-96 / 100</td>
+      </tr>
+      
+      <tr data-name="M70 Tundra" data-category="Винтовки" data-damage="-147.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677171556_1565264058_800px-winchester_m_2dbd67381b.png" alt="">
+            <a href="weapons/m70-tundra-918.html">M70 Tundra</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-147 / 100</td>
+      </tr>
+      
+      <tr data-name="MK II" data-category="Пистолеты" data-damage="-20.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1693512880_6_27502bcd4c.png" alt="">
+            <a href="weapons/mk-ii-943.html">MK II</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты</span></td>
+        <td class="dmg">-20 / 100</td>
+      </tr>
+      
+      <tr data-name="MLOCK-91" data-category="Пистолеты" data-damage="-38.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1693513309_6_e4d4eb3c24.png" alt="">
+            <a href="weapons/mlock-91-945.html">MLOCK-91</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты</span></td>
+        <td class="dmg">-38 / 100</td>
+      </tr>
+      
+      <tr data-name="P1" data-category="Пистолеты" data-damage="-35.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677263364_1648062271_p1_7bce733fcf.png" alt="">
+            <a href="weapons/p1-1674.html">P1</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты</span></td>
+        <td class="dmg">-35 / 100</td>
+      </tr>
+      
+      <tr data-name="Pioneer" data-category="Винтовки" data-damage="-109.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677166370_1617304100_pioner_6d53872531.png" alt="">
+            <a href="weapons/pioneer-1456.html">Pioneer</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-109 / 100</td>
+      </tr>
+      
+      <tr data-name="R12" data-category="Дробовики" data-damage="-140.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/r12_dayz_43cbb0d802.png" alt="">
+            <a href="weapons/r12-2783.html">R12</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Дробовики</span></td>
+        <td class="dmg">-140 / 100</td>
+      </tr>
+      
+      <tr data-name="RAK-37" data-category="Пистолеты-пулеметы" data-damage="-32.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1744727824_3_058faa925a.png" alt="">
+            <a href="weapons/rak-37-2765.html">RAK-37</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты-пулеметы</span></td>
+        <td class="dmg">-32 / 100</td>
+      </tr>
+      
+      <tr data-name="SCR 17" data-category="Автоматические винтовки" data-damage="-133.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/scar1_1e230e262f.png" alt="">
+            <a href="weapons/scr-17-2976.html">SCR 17</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-133 / 100</td>
+      </tr>
+      
+      <tr data-name="SG5-K" data-category="Пистолеты-пулеметы" data-damage="-40.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/mp5k_58fcce32ce.png" alt="">
+            <a href="weapons/sg5-k-902.html">SG5-K</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты-пулеметы</span></td>
+        <td class="dmg">-40 / 100</td>
+      </tr>
+      
+      <tr data-name="SSG 82" data-category="Винтовки" data-damage="-114.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677098903_dayz-vintovka-ssg-82_f90265d810.png" alt="">
+            <a href="weapons/ssg-82-1759.html">SSG 82</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-114 / 100</td>
+      </tr>
+      
+      <tr data-name="Sporter 22" data-category="Винтовки" data-damage="-20.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1592313745_745px-sporter_22_wood-1_fa4f4c4c8c.png" alt="">
+            <a href="weapons/sporter-22-1212.html">Sporter 22</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-20 / 100</td>
+      </tr>
+      
+      <tr data-name="USG-45" data-category="Пистолеты-пулеметы" data-damage="-37.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/ump_c852c56971.png" alt="">
+            <a href="weapons/usg-45-903.html">USG-45</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты-пулеметы</span></td>
+        <td class="dmg">-37 / 100</td>
+      </tr>
+      
+      <tr data-name="Арбалет" data-category="Метательное" data-damage="-125.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/arbalet_35f5a373de.png" alt="">
+            <a href="weapons/арбалет-1885.html">Арбалет</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Метательное</span></td>
+        <td class="dmg">-125 / 100</td>
+      </tr>
+      
+      <tr data-name="БК-12" data-category="Дробовики" data-damage="-140.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/dayz-drobovik-bk-12-123_b545dcdd6d.png" alt="">
+            <a href="weapons/бк-12-1763.html">БК-12</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Дробовики</span></td>
+        <td class="dmg">-140 / 100</td>
+      </tr>
+      
+      <tr data-name="БК-133" data-category="Дробовики" data-damage="-140.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677423478_1565266390_800px-mp-133-shotg_d2657e6611.png" alt="">
+            <a href="weapons/бк-133-920.html">БК-133</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Дробовики</span></td>
+        <td class="dmg">-140 / 100</td>
+      </tr>
+      
+      <tr data-name="БК-18" data-category="Винтовки" data-damage="-105.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677169421_1565265234_800px-izh18_rifle_35c99b1943.png" alt="">
+            <a href="weapons/бк-18-919.html">БК-18</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-105 / 100</td>
+      </tr>
+      
+      <tr data-name="БК-43" data-category="Дробовики" data-damage="-140.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/izh43_6b18b466db.png" alt="">
+            <a href="weapons/бк-43-1061.html">БК-43</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Дробовики</span></td>
+        <td class="dmg">-140 / 100</td>
+      </tr>
+      
+      <tr data-name="Бизон" data-category="Пистолеты-пулеметы" data-damage="-34.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1643295948_bizon-1_ce4aa469e7.png" alt="">
+            <a href="weapons/бизон-1621.html">Бизон</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты-пулеметы</span></td>
+        <td class="dmg">-34 / 100</td>
+      </tr>
+      
+      <tr data-name="ВС-89" data-category="Винтовки" data-damage="-147.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/bez-imeni-3_7d8fb950e1.png" alt="">
+            <a href="weapons/вс-89-2224.html">ВС-89</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-147 / 100</td>
+      </tr>
+      
+      <tr data-name="ВСД" data-category="Винтовки" data-damage="-144.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/svd1_bbcce41082.png" alt="">
+            <a href="weapons/всд-2677.html">ВСД</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-144 / 100</td>
+      </tr>
+      
+      <tr data-name="ВСД" data-category="Винтовки" data-damage="-144.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677179719_1565134982_800px-svd_w__pso-1_a451e905c6.png" alt="">
+            <a href="weapons/всд-913.html">ВСД</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-144 / 100</td>
+      </tr>
+      
+      <tr data-name="ВСС" data-category="Автоматические винтовки" data-damage="-75.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677009684_1564606999_800px-vssvintorez_46ec06c217.png" alt="">
+            <a href="weapons/всс-910.html">ВСС</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-75 / 100</td>
+      </tr>
+      
+      <tr data-name="Вайга" data-category="Дробовики" data-damage="-140.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677422915_1572643006_sayga_6cf66062bd.png" alt="">
+            <a href="weapons/вайга-1056.html">Вайга</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Дробовики</span></td>
+        <td class="dmg">-140 / 100</td>
+      </tr>
+      
+      <tr data-name="Винтовка Мосин 91/30" data-category="Винтовки" data-damage="-152.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677179183_1565135740_799px-mosin_9130_2_2428c205c0.png" alt="">
+            <a href="weapons/винтовка-мосин-91-30-914.html">Винтовка Мосин 91/30</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-152 / 100</td>
+      </tr>
+      
+      <tr data-name="Вихрь" data-category="Автоматические винтовки" data-damage="-75.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/vikhr_ab3d83a1b5.png" alt="">
+            <a href="weapons/вихрь-2142.html">Вихрь</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-75 / 100</td>
+      </tr>
+      
+      <tr data-name="Гранатомет М79" data-category="Гранатометы" data-damage="-110.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1653039390_79_e56c4edfb1.png" alt="">
+            <a href="weapons/гранатомет-м79-1711.html">Гранатомет М79</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Гранатометы</span></td>
+        <td class="dmg">-110 / 100</td>
+      </tr>
+      
+      <tr data-name="Дерринджер" data-category="Пистолеты" data-damage="-51.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1693514081_1_c97cfcb011.png" alt="">
+            <a href="weapons/дерринджер-1717.html">Дерринджер</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты</span></td>
+        <td class="dmg">-51 / 100</td>
+      </tr>
+      
+      <tr data-name="ИЖ-70" data-category="Пистолеты" data-damage="-30.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1693513175_6_c61f52f31d.png" alt="">
+            <a href="weapons/иж-70-898.html">ИЖ-70</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты</span></td>
+        <td class="dmg">-30 / 100</td>
+      </tr>
+      
+      <tr data-name="КА-101" data-category="Автоматические винтовки" data-damage="-96.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677014369_1564595373_800px-ak101_dd13f61a3d.png" alt="">
+            <a href="weapons/ка-101-907.html">КА-101</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-96 / 100</td>
+      </tr>
+      
+      <tr data-name="КА-74" data-category="Автоматические винтовки" data-damage="-80.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677015962_1564594826_800px-ak74_a6fa10d79b.png" alt="">
+            <a href="weapons/ка-74-906.html">КА-74</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-80 / 100</td>
+      </tr>
+      
+      <tr data-name="КА-М" data-category="Автоматические винтовки" data-damage="-90.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677016423_1564590485_800px-akm_db52d8b0a0.png" alt="">
+            <a href="weapons/ка-м-905.html">КА-М</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-90 / 100</td>
+      </tr>
+      
+      <tr data-name="КАС-74У" data-category="Автоматические винтовки" data-damage="-65.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1565978530_aks74u_cd650140fa.png" alt="">
+            <a href="weapons/кас-74у-939.html">КАС-74У</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-65 / 100</td>
+      </tr>
+      
+      <tr data-name="Карабин с магазином" data-category="Винтовки" data-damage="-64.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677168829_1580404683_repiter_b0bfbad16e.png" alt="">
+            <a href="weapons/карабин-с-магазином-1124.html">Карабин с магазином</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-64 / 100</td>
+      </tr>
+      
+      <tr data-name="М16-А2" data-category="Автоматические винтовки" data-damage="-107.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1623973853_limonad_loh-1_0dc85067a7.png" alt="">
+            <a href="weapons/м16-а2-1530.html">М16-А2</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-107 / 100</td>
+      </tr>
+      
+      <tr data-name="Револьвер Магнум" data-category="Пистолеты" data-damage="-58.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677356892_1597878781_magnum_ac322b5063.png" alt="">
+            <a href="weapons/револьвер-магнум-1254.html">Револьвер Магнум</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты</span></td>
+        <td class="dmg">-58 / 100</td>
+      </tr>
+      
+      <tr data-name="СВАЛ" data-category="Автоматические винтовки" data-damage="-75.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677008620_1612688524_181px-geh_b4c2a648b4.png" alt="">
+            <a href="weapons/свал-1442.html">СВАЛ</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Автоматические винтовки</span></td>
+        <td class="dmg">-75 / 100</td>
+      </tr>
+      
+      <tr data-name="СК 59/66" data-category="Винтовки" data-damage="-110.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677178651_1565211550_798px-sks_99a8e3405e.png" alt="">
+            <a href="weapons/ск-59-66-916.html">СК 59/66</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Винтовки</span></td>
+        <td class="dmg">-110 / 100</td>
+      </tr>
+      
+      <tr data-name="Сигнальный пистолет" data-category="Пистолеты" data-damage="-10.0">
+        <td>
+          <div class="name-cell">
+            <img class="row-thumb" src="images/1677263577_1603406271_bez-imeni-10_371f2e3ac7.png" alt="">
+            <a href="weapons/сигнальный-пистолет-1283.html">Сигнальный пистолет</a>
+          </div>
+        </td>
+        <td><span class="cat-badge">Пистолеты</span></td>
+        <td class="dmg">-10 / 100</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+<footer class="site">Created by Dena</footer>
+<script>
+document.querySelectorAll('table.weapon-list th[data-key]').forEach(function(th){
+  th.addEventListener('click', function(){
+    var table = th.closest('table');
+    var tbody = table.querySelector('tbody');
+    var rows = Array.from(tbody.querySelectorAll('tr'));
+    var key = th.getAttribute('data-key');
+    var type = th.getAttribute('data-type') || 'text';
+    var asc = th.getAttribute('data-asc') !== 'true';
+    table.querySelectorAll('th').forEach(function(h){ h.classList.remove('sorted'); h.querySelector('.arrow').textContent='▾'; h.removeAttribute('data-asc'); });
+    th.setAttribute('data-asc', asc);
+    th.classList.add('sorted');
+    th.querySelector('.arrow').textContent = asc ? '▲' : '▼';
+    rows.sort(function(a,b){
+      var av = a.getAttribute('data-'+key), bv = b.getAttribute('data-'+key);
+      if(type === 'num'){
+        av = parseFloat(av); bv = parseFloat(bv);
+        return asc ? av-bv : bv-av;
+      }
+      return asc ? av.localeCompare(bv,'ru') : bv.localeCompare(av,'ru');
+    });
+    rows.forEach(function(r){ tbody.appendChild(r); });
+  });
+});
+var searchBox = document.getElementById('search');
+var activeCategory = 'all';
+
+function applyFilters(){
+  var q = searchBox ? searchBox.value.trim().toLowerCase() : '';
+  var rows = document.querySelectorAll('table.weapon-list tbody tr');
+  var visible = 0;
+  rows.forEach(function(r){
+    var matchesSearch = r.getAttribute('data-name').toLowerCase().includes(q) || r.getAttribute('data-category').toLowerCase().includes(q);
+    var matchesCategory = activeCategory === 'all' || r.getAttribute('data-category') === activeCategory;
+    var match = matchesSearch && matchesCategory;
+    r.style.display = match ? '' : 'none';
+    if(match) visible++;
+  });
+  var countEl = document.getElementById('count');
+  if(countEl) countEl.textContent = visible + ' з ' + rows.length;
+}
+
+if(searchBox){
+  searchBox.addEventListener('input', applyFilters);
+}
+
+document.querySelectorAll('.cat-filter .chip').forEach(function(chip){
+  chip.addEventListener('click', function(){
+    document.querySelectorAll('.cat-filter .chip').forEach(function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+    activeCategory = chip.getAttribute('data-cat');
+    applyFilters();
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>DMR — DayZ Паляниця</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#14140f; --bg2:#1c1c15; --panel:#20201a; --border:#3a3a2c;
+  --text:#e8e4d8; --muted:#a9a495; --accent:#c9a24b; --accent2:#7a8f5c;
+  --danger:#b5493f; --link:#d9b96a;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"Segoe UI",Roboto,Arial,sans-serif; line-height:1.5;
+}
+a{color:var(--link); text-decoration:none;}
+a:hover{text-decoration:underline;}
+header.site{
+  background:linear-gradient(180deg,#22221a,#181812);
+  border-bottom:2px solid var(--border);
+  padding:22px 28px;
+}
+header.site h1{margin:0; font-size:1.6rem; letter-spacing:.5px;}
+header.site .sub{color:var(--muted); font-size:.9rem; margin-top:4px;}
+.container{max-width:1200px; margin:0 auto; padding:24px 20px 60px;}
+.back-link{display:inline-block; margin-bottom:16px; color:var(--muted); font-size:.9rem;}
+.back-link:hover{color:var(--link);}
+
+/* index table */
+.controls{display:flex; gap:12px; align-items:center; margin-bottom:16px; flex-wrap:wrap;}
+.controls input[type=text]{
+  background:var(--panel); border:1px solid var(--border); color:var(--text);
+  padding:8px 12px; border-radius:6px; font-size:.95rem; min-width:240px;
+}
+.controls .count{color:var(--muted); font-size:.85rem;}
+.cat-filter{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;}
+.cat-filter .chip{
+  background:var(--panel); border:1px solid var(--border); color:var(--muted);
+  padding:6px 14px; border-radius:20px; font-size:.85rem; cursor:pointer; user-select:none;
+  transition:all .15s;
+}
+.cat-filter .chip:hover{border-color:var(--accent); color:var(--text);}
+.cat-filter .chip.active{background:var(--accent); border-color:var(--accent); color:#1a1a12; font-weight:600;}
+table.weapon-list{width:100%; border-collapse:collapse; background:var(--panel); border-radius:8px; overflow:hidden;}
+table.weapon-list th{
+  text-align:left; padding:12px 14px; background:#26261d; border-bottom:2px solid var(--border);
+  cursor:pointer; user-select:none; font-size:.9rem; white-space:nowrap; color:var(--accent);
+}
+table.weapon-list th .arrow{opacity:.4; font-size:.75em; margin-left:4px;}
+table.weapon-list th.sorted .arrow{opacity:1;}
+table.weapon-list td{padding:10px 14px; border-bottom:1px solid var(--border); font-size:.95rem;}
+table.weapon-list tr:hover td{background:#26261b;}
+.row-thumb{width:38px; height:38px; object-fit:contain; vertical-align:middle; margin-right:10px; background:#0f0f0c; border-radius:4px; border:1px solid var(--border);}
+.name-cell{display:flex; align-items:center;}
+.cat-badge{
+  display:inline-block; padding:2px 9px; border-radius:20px; font-size:.78rem;
+  background:#2c2c20; border:1px solid var(--border); color:var(--muted);
+}
+.dmg{color:var(--danger); font-variant-numeric:tabular-nums; font-weight:600;}
+
+/* weapon detail page */
+.weapon-hero{display:flex; gap:24px; flex-wrap:wrap; margin-bottom:28px;}
+.gallery{display:flex; flex-direction:column; gap:10px;}
+.gallery .main-shot{
+  width:494px; max-width:100%; height:494px; object-fit:contain; background:var(--panel);
+  border:1px solid var(--border); border-radius:10px; padding:14px;
+}
+.gallery .thumbs{display:flex; gap:8px; flex-wrap:wrap;}
+.gallery .thumbs img{
+  width:76px; height:76px; object-fit:contain; background:var(--panel);
+  border:1px solid var(--border); border-radius:6px; padding:6px; cursor:pointer;
+}
+.gallery .thumbs img:hover{border-color:var(--accent);}
+.weapon-meta{flex:1; min-width:260px;}
+.weapon-meta h1{margin:0 0 6px; font-size:1.9rem;}
+.weapon-meta .cat-badge{margin-bottom:10px;}
+.weapon-meta .desc{color:var(--muted); margin-top:10px; max-width:640px;}
+
+.section{margin-bottom:26px;}
+.section h2{
+  font-size:1.05rem; color:var(--accent); border-bottom:1px solid var(--border);
+  padding-bottom:8px; margin-bottom:12px; display:flex; align-items:center; gap:8px;
+}
+table.info-table{width:100%; max-width:640px; border-collapse:collapse; background:var(--panel); border-radius:6px; overflow:hidden;}
+table.info-table td{padding:9px 14px; border-bottom:1px solid var(--border); font-size:.93rem;}
+table.info-table td:first-child{color:var(--muted); width:55%;}
+table.info-table tr:last-child td{border-bottom:none;}
+
+table.economy-table{width:100%; max-width:900px; border-collapse:collapse; background:var(--panel); border-radius:6px; overflow:hidden;}
+table.economy-table th{text-align:left; padding:9px 14px; background:#26261d; font-size:.85rem; color:var(--accent);}
+table.economy-table td{padding:9px 14px; border-bottom:1px solid var(--border); font-size:.9rem;}
+table.economy-table tr:last-child td{border-bottom:none;}
+
+.module-grid{display:flex; flex-wrap:wrap; gap:14px;}
+a.module-card{
+  background:var(--panel); border:1px solid var(--border); border-radius:8px;
+  padding:12px; width:190px; display:flex; flex-direction:column; gap:6px;
+  color:var(--text); text-decoration:none; transition:border-color .15s;
+}
+a.module-card:hover{border-color:var(--accent); text-decoration:none;}
+.module-card img{
+  width:100%; height:90px; object-fit:contain; background:#0f0f0c; border-radius:6px;
+}
+.module-card .m-name{font-size:.88rem; font-weight:600; color:var(--link);}
+.module-card .m-desc{font-size:.78rem; color:var(--muted); flex:1;}
+.module-card .m-stats{font-size:.76rem; color:var(--accent2);}
+
+/* module (attachment) detail page */
+.module-hero{display:flex; gap:24px; flex-wrap:wrap; margin-bottom:28px; align-items:flex-start;}
+.module-hero img{
+  width:240px; height:240px; object-fit:contain; background:var(--panel);
+  border:1px solid var(--border); border-radius:10px; padding:14px;
+}
+.compat-list{display:flex; flex-wrap:wrap; gap:10px;}
+.compat-chip{
+  display:flex; align-items:center; gap:8px; background:var(--panel);
+  border:1px solid var(--border); border-radius:20px; padding:6px 14px 6px 6px;
+  color:var(--text); font-size:.9rem;
+}
+.compat-chip:hover{border-color:var(--accent); text-decoration:none;}
+.compat-chip img{width:28px; height:28px; object-fit:contain; border-radius:50%; background:#0f0f0c;}
+
+footer.site{text-align:center; color:var(--muted); font-size:.8rem; padding:20px; border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+<header class="site">
+  <h1>DMR</h1>
+  <div class="sub">DayZ Паляниця — Каталог оружия</div>
+</header>
+<div class="container">
+  <a class="back-link" href="../index.html">← Ко всему списку оружия</a>
+
+  <div class="weapon-hero">
+    
+    
+    <div class="gallery">
+      <img class="main-shot" id="mainShot" src="../images/dmr-m14_5e9113da28.png" alt="DMR">
+      
+    </div>
+    
+    <div class="weapon-meta">
+      <div class="cat-badge">Винтовки</div>
+      <h1 style="font-size:1.4rem; margin-top:8px;">DMR</h1>
+      <div class="desc">Полуавтоматическая винтовка со съемным магазином. Реечный механизм позволяет крепить прицелы западного производства. Отличается высокой точностью на больших дистанциях, однако имеет существенную отдачу при быстром темпе стрельбы. Используются патроны калибра.308 WIN.</div>
+    </div>
+  </div>
+
+  
+  <div class="section">
+    <h2>📋 Основная информация</h2>
+    <table class="info-table">
+      
+      <tr><td>Вес</td><td>3 кг</td></tr>
+      
+      <tr><td>Размер</td><td>3x9</td></tr>
+      
+      <tr><td>Прочность</td><td>200 Hp</td></tr>
+      
+      <tr><td>ID предмета</td><td>M14</td></tr>
+      
+      <tr><td>Время жизни на земле</td><td>240 мин</td></tr>
+      
+    </table>
+  </div>
+  
+
+  
+  <div class="section">
+    <h2>🎯 Характеристики</h2>
+    <table class="info-table">
+      
+      <tr><td>Урон</td><td>-149 / 100</td></tr>
+      
+      <tr><td>Вместимость внут.магазина</td><td>1 пат</td></tr>
+      
+      <tr><td>Долговечность</td><td>275 выстрелов</td></tr>
+      
+      <tr><td>Раскачивание</td><td>203</td></tr>
+      
+      <tr><td>Вертикальная отдача</td><td>107</td></tr>
+      
+      <tr><td>Горизонтальная отдача</td><td>85</td></tr>
+      
+      <tr><td>Режим стрельбы</td><td>Полуавт</td></tr>
+      
+      <tr><td>Слышимость</td><td>3000 м</td></tr>
+      
+      <tr><td>Скорость полета пули</td><td>947.1 м\с</td></tr>
+      
+      <tr><td>Скорострельность</td><td>451.12 в\м</td></tr>
+      
+    </table>
+  </div>
+  
+
+  
+  <div class="section">
+    <h2>💰 Экономика</h2>
+    <table class="economy-table">
+      <tr><th>Локация</th><th>Сколько</th><th>Тир</th><th>Где можно найти</th></tr>
+      
+      <tr><td>Чернарусь</td><td>2 шт</td><td>4</td><td>Крушение вертолета Конвой Военный поезд</td></tr>
+      
+    </table>
+  </div>
+  
+
+  
+  <div class="section">
+    <h2>🔧 Ремонт</h2>
+    <div class="module-grid">
+      
+      <a class="module-card" href="../modules/комплект-для-чистки-оружия-1296.html">
+        <img src="../images/1604058974_bez-imeni-9_4d5f447dac.png" alt="Комплект для чистки оружия">
+        <div class="m-name">Комплект для чистки оружия</div>
+        <div class="m-desc">Деревянный ящик, содержащий полный универсальный комплект для ухода за огнестрельным оружием...</div>
+        <div class="m-stats">
+          Вес: 1 кг
+           · Размер: 2x3
+        </div>
+      </a>
+      
+    </div>
+  </div>
+  
+  <div class="section">
+    <h2>🔘 Калибр</h2>
+    <div class="module-grid">
+      
+      <a class="module-card" href="../modules/308-win-716.html">
+        <img src="../images/1565361758_1564505597_168px-ammo_308win_5f1f86dc1a.png" alt="308 Win">
+        <div class="m-name">308 Win</div>
+        <div class="m-desc">Винтовочный патрон .308WIN. Используется в некоторых винтовках...</div>
+        <div class="m-stats">
+          Вес: 0.250 кг
+           · Размер: 1x1
+        </div>
+      </a>
+      
+      <a class="module-card" href="../modules/трассирующие-патроны-308-win-1805.html">
+        <img src="../images/1565361815_1564498549_252px-ammo_308wint_59206a621d.png" alt="Трассирующие патроны .308 Win">
+        <div class="m-name">Трассирующие патроны .308 Win</div>
+        <div class="m-desc">Винтовочный патрон .308 WIN с пиротехническим зарядом. Используется в некоторых винтовках...</div>
+        <div class="m-stats">
+          Вес: 0.250 кг
+           · Размер: 1x1
+        </div>
+      </a>
+      
+    </div>
+  </div>
+  
+  <div class="section">
+    <h2>🎯 Прицелы</h2>
+    <div class="module-grid">
+      
+      <a class="module-card" href="../modules/голографический-прицел-2979.html">
+        <img src="../images/pricel1_84c2115466.png" alt="Голографический прицел">
+        <div class="m-name">Голографический прицел</div>
+        <div class="m-desc">Стандартный реечный голографический прицел без увеличения с устройством освещения сетки на батарейке...</div>
+        <div class="m-stats">
+          Вес: 0.5 кг
+           · Размер: 1х1
+        </div>
+      </a>
+      
+      <a class="module-card" href="../modules/марксманский-прицел-2763.html">
+        <img src="../images/22_a41dc1c6d6.png" alt="Марксманский прицел">
+        <div class="m-name">Марксманский прицел</div>
+        <div class="m-desc">Стандартный оптический прицел с переменным увеличением от 3,5 до 10 крат и сеткой MilDot. Этот надежный..</div>
+        <div class="m-stats">
+          Вес: 1 кг
+           · Размер: 1х4
+        </div>
+      </a>
+      
+      <a class="module-card" href="../modules/nv-pvs4-1558.html">
+        <img src="../images/1630611114_optic_pnv_24f3728fb6.png" alt="NV-PVS4">
+        <div class="m-name">NV-PVS4</div>
+        <div class="m-desc">Стандартный реечный прицел ночного видения с 3,5-кратным увеличением. Работает от батареи 9В. Известен среди..</div>
+        <div class="m-stats">
+          Вес: 2 кг
+           · Размер: 2x3
+        </div>
+      </a>
+      
+      <a class="module-card" href="../modules/atog-x6-1532.html">
+        <img src="../images/1623975535_44_c0d3507e8a.png" alt="ATOG x6">
+        <div class="m-name">ATOG x6</div>
+        <div class="m-desc">Стандартный реечный 6-кратный прицел. Предназначен для западных снайперских винтовок. На верхней рейке..</div>
+        <div class="m-stats">
+          Вес: 1 кг
+           · Размер: 2x3
+        </div>
+      </a>
+      
+      <a class="module-card" href="../modules/прицел-rvn-781.html">
+        <img src="../images/1623508493_8_3124266506.png" alt="Прицел RVN">
+        <div class="m-name">Прицел RVN</div>
+        <div class="m-desc">Стандартный реечный прицел без увеличения с устройством освещения сетки на батарейке...</div>
+        <div class="m-stats">
+          Вес: 0.5 кг
+           · Размер: 1x2
+        </div>
+      </a>
+      
+      <a class="module-card" href="../modules/прицел-baraka-780.html">
+        <img src="../images/1623508437_9_e1fdc3ed03.png" alt="Прицел Baraka">
+        <div class="m-name">Прицел Baraka</div>
+        <div class="m-desc">Стандартный реечный прицел без увеличения с устройством освещения сетки на батарейке ...</div>
+        <div class="m-stats">
+          Вес: 0.5 кг
+           · Размер: 1x2
+        </div>
+      </a>
+      
+      <a class="module-card" href="../modules/оружейный-прицел-m68-779.html">
+        <img src="../images/1623508408_10_7f0917e05e.png" alt="Оружейный прицел M68">
+        <div class="m-name">Оружейный прицел M68</div>
+        <div class="m-desc">Стандартный реечный прицел без увеличения с устройством освещения сетки на батарейке . Разработан для..</div>
+        <div class="m-stats">
+          Вес: 0.5 кг
+           · Размер: 1x2
+        </div>
+      </a>
+      
+      <a class="module-card" href="../modules/atog-778.html">
+        <img src="../images/1623508387_11_2ebc206ae2.png" alt="ATOG">
+        <div class="m-name">ATOG</div>
+        <div class="m-desc">Стандартный реечный 4-кратный прицел с тритиевой подсветкой сетки, разработан для автомата М4-А1...</div>
+        <div class="m-stats">
+          Вес: 0.5 кг
+           · Размер: 1x2
+        </div>
+      </a>
+      
+    </div>
+  </div>
+  
+  <div class="section">
+    <h2>🔫 Дульные модули</h2>
+    <div class="module-grid">
+      
+      <a class="module-card" href="../modules/самодельный-глушитель-794.html">
+        <img src="../images/1565976686_skidka-vosstanovleno_be0ebe2e64.png" alt="Самодельный глушитель">
+        <div class="m-name">Самодельный глушитель</div>
+        <div class="m-desc">Самодельный глушитель для огнестрельного оружия. Уменьшает громкость звука и дульное пламя при стрельбе...</div>
+        <div class="m-stats">
+          Вес: 0.5 кг
+           · Размер: 1x3
+        </div>
+      </a>
+      
+    </div>
+  </div>
+  
+  <div class="section">
+    <h2>🧩 Дополнительные модули</h2>
+    <div class="module-grid">
+      
+      <a class="module-card" href="../modules/маскировка-для-оружия-893.html">
+        <img src="../images/1565788839_291px-ghilliegunwraptan_8215ab006b.png" alt="Маскировка для оружия">
+        <div class="m-name">Маскировка для оружия</div>
+        <div class="m-desc">Камуфляжная обмотка, используемая для скрытия формы длинного огнестрельного оружия...</div>
+        <div class="m-stats">
+          Вес: 1 кг
+           · Размер: 3x4
+        </div>
+      </a>
+      
+    </div>
+  </div>
+  
+  <div class="section">
+    <h2>📦 Магазины</h2>
+    <div class="module-grid">
+      
+      <a class="module-card" href="../modules/магазин-dmr-20-пат-2101.html">
+        <img src="../images/magazin-na-dmr-na-20-pat-1_e2a937ab84.png" alt="Магазин DMR, 20 пат.">
+        <div class="m-name">Магазин DMR, 20 пат.</div>
+        <div class="m-desc">Съемный магазин для винтовки DMR. Вмещает до 20 патронов калибра .308 WIN...</div>
+        <div class="m-stats">
+          Вес: 0.5 кг
+           · Размер: 1x2
+        </div>
+      </a>
+      
+      <a class="module-card" href="../modules/магазин-dmr-10-пат-2100.html">
+        <img src="../images/magazin-na-dmr-na-10-pat_7b045dd9cb.png" alt="Магазин DMR, 10 пат.">
+        <div class="m-name">Магазин DMR, 10 пат.</div>
+        <div class="m-desc">Съемный магазин для винтовки DMR. Вмещает до 10 патронов калибра .308 WIN...</div>
+        <div class="m-stats">
+          Вес: 0.25 кг
+           · Размер: 1x2
+        </div>
+      </a>
+      
+    </div>
+  </div>
+  
+</div>
+<footer class="site">Created by Dena</footer>
+</body>
+</html>
