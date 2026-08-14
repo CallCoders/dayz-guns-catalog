@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Приладдя — DayZ - Оружие</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#14140f; --bg2:#1c1c15; --panel:#20201a; --border:#3a3a2c;
+  --text:#e8e4d8; --muted:#a9a495; --accent:#c9a24b; --accent2:#7a8f5c;
+  --danger:#b5493f; --link:#d9b96a;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"Segoe UI",Roboto,Arial,sans-serif; line-height:1.5;
+}
+a{color:var(--link); text-decoration:none;}
+a:hover{text-decoration:underline;}
+header.site{
+  background:linear-gradient(180deg,#22221a,#181812);
+  border-bottom:2px solid var(--border);
+  padding:22px 28px;
+}
+header.site h1{margin:0; font-size:1.6rem; letter-spacing:.5px;}
+header.site .sub{color:var(--muted); font-size:.9rem; margin-top:4px;}
+header.site .nav-link{margin-top:8px; display:inline-block; font-size:.9rem;}
+.container{max-width:1200px; margin:0 auto; padding:24px 20px 60px;}
+.back-link{display:inline-block; margin-bottom:16px; color:var(--muted); font-size:.9rem;}
+.back-link:hover{color:var(--link);}
+.controls{display:flex; gap:12px; align-items:center; margin-bottom:16px; flex-wrap:wrap;}
+.controls input[type=text]{
+  background:var(--panel); border:1px solid var(--border); color:var(--text);
+  padding:8px 12px; border-radius:6px; font-size:.95rem; min-width:240px;
+}
+.controls .count{color:var(--muted); font-size:.85rem;}
+.cat-filter{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px;}
+.cat-filter .chip{
+  background:var(--panel); border:1px solid var(--border); color:var(--muted);
+  padding:6px 14px; border-radius:20px; font-size:.85rem; cursor:pointer; user-select:none;
+  transition:all .15s;
+}
+.cat-filter .chip:hover{border-color:var(--accent); color:var(--text);}
+.cat-filter .chip.active{background:var(--accent); border-color:var(--accent); color:#1a1a12; font-weight:600;}
+.cat-badge{
+  display:inline-block; padding:2px 9px; border-radius:20px; font-size:.78rem;
+  background:#2c2c20; border:1px solid var(--border); color:var(--muted); white-space:nowrap;
+}
+.acc-list{display:flex; flex-direction:column; gap:12px;}
+.acc-card{
+  display:flex; gap:16px; background:var(--panel); border:1px solid var(--border);
+  border-radius:10px; padding:14px;
+}
+.acc-thumb{width:64px; height:64px; object-fit:contain; background:#0f0f0c; border-radius:6px; padding:6px; flex-shrink:0;}
+.acc-body{flex:1; min-width:0;}
+.acc-head{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:4px;}
+.acc-name{font-size:1.05rem; font-weight:600; color:var(--link);}
+.acc-desc{color:var(--muted); font-size:.85rem; margin-bottom:8px; max-width:760px;}
+.acc-compat{display:flex; align-items:flex-start; gap:10px; flex-wrap:wrap;}
+.acc-compat-label{color:var(--accent); font-size:.8rem; white-space:nowrap; padding-top:6px;}
+.acc-none{color:var(--muted); font-size:.85rem;}
+.compat-list{display:flex; flex-wrap:wrap; gap:8px;}
+.compat-chip{
+  display:inline-flex; align-items:center; background:#26261b;
+  border:1px solid var(--border); border-radius:20px; padding:5px 12px;
+  color:var(--text); font-size:.83rem;
+}
+.compat-chip:hover{border-color:var(--accent); text-decoration:none;}
+footer.site{text-align:center; color:var(--muted); font-size:.8rem; padding:20px; border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+<header class="site">
+  <h1>Приладдя</h1>
+  <div class="sub">93 одиниць — патрони, прицілы, магазини, і з якою зброєю вони сумісні</div>
+</header>
+<div class="container">
+  <a class="back-link" href="index.html">← До всієї зброї</a>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Пошук за назвою...">
+    <span class="count" id="count"></span>
+  </div>
+  <div class="cat-filter" id="catFilter">
+    <span class="chip active" data-cat="all">Всі (93)</span>
+    <span class="chip" data-cat="Калибр">🔘 Патроны (27)</span>
+    <span class="chip" data-cat="Прицелы">🎯 Прицелы (19)</span>
+    <span class="chip" data-cat="Магазины">🧰 Магазины (47)</span>
+  </div>
+
+  <div class="acc-list" id="accList">
+        <div class="acc-card" data-cat="Калибр" data-name="308 win">
+          <img class="acc-thumb" src="images/1565361758_1564505597_168px-ammo_308win_5f1f86dc1a.png" alt="308 Win">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/308-win-716.html">308 Win</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Винтовочный патрон .308WIN. Используется в некоторых винтовках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (6):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/blaze-1062.html">BLAZE</a><a class="compat-chip" href="weapons/cr-550-savanna-1673.html">CR-550 Savanna</a><a class="compat-chip" href="weapons/dmr-2099.html">DMR</a><a class="compat-chip" href="weapons/lar-909.html">LAR</a><a class="compat-chip" href="weapons/m70-tundra-918.html">M70 Tundra</a><a class="compat-chip" href="weapons/scr-17-2976.html">SCR 17</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="357">
+          <img class="acc-thumb" src="images/1580403388_1565361330_156449823639_177px_4cdc0f15c4.png" alt="357">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/357-1125.html">357</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Пистолетный патрон .357 Rounds. Используется в некоторых пистолетах и винтовках ...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (4):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/deagle-1255.html">DEAGLE</a><a class="compat-chip" href="weapons/дерринджер-1717.html">Дерринджер</a><a class="compat-chip" href="weapons/карабин-с-магазином-1124.html">Карабин с магазином</a><a class="compat-chip" href="weapons/револьвер-магнум-1254.html">Револьвер Магнум</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="40-мм граната ро-x">
+          <img class="acc-thumb" src="images/1676890325_1654812422_dayz-40mm-granata_914aedf80d.png" alt="40-мм граната РО-X">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/40-мм-граната-ро-x-1716.html">40-мм граната РО-X</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Своеобразная 40-мм граната со стеклянным куполом вместо обычного заряда ВВ. По-видимому, купол должен..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/гранатомет-м79-1711.html">Гранатомет М79</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="40-мм дымовая граната">
+          <img class="acc-thumb" src="images/1653039944_4_9fb6a60340.png" alt="40-мм дымовая граната">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/40-мм-дымовая-граната-1714.html">40-мм дымовая граната</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Боеприпас для гранатометов. При ударе выпускает густой цветной дым...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/гранатомет-м79-1711.html">Гранатомет М79</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="40-мм фугасная граната">
+          <img class="acc-thumb" src="images/1676890432_1653040366_7_e1fc62bb82.png" alt="40-мм фугасная граната">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/40-мм-фугасная-граната-1715.html">40-мм фугасная граната</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Боеприпас для гранатометов. Взрывается при ударе...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/гранатомет-м79-1711.html">Гранатомет М79</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="5.45x39 мм">
+          <img class="acc-thumb" src="images/545-dayz_09cb5a809c.png" alt="5.45x39 мм">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/5-45x39-мм-713.html">5.45x39 мм</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Промежуточный патрон 5.45х39 мм. Используется в некоторых винтовках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/ssg-82-1759.html">SSG 82</a><a class="compat-chip" href="weapons/ка-74-906.html">КА-74</a><a class="compat-chip" href="weapons/кас-74у-939.html">КАС-74У</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="5.56x45 мм">
+          <img class="acc-thumb" src="images/556-1_060c4c6c12.png" alt="5.56x45 мм">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/5-56x45-мм-714.html">5.56x45 мм</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Промежуточный патрон 5.56x45 мм . Используется в некоторых винтовках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (7):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-a1-1593.html">AUR A1</a><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/le-mas-1556.html">LE-MAS</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/pioneer-1456.html">Pioneer</a><a class="compat-chip" href="weapons/ка-101-907.html">КА-101</a><a class="compat-chip" href="weapons/м16-а2-1530.html">М16-А2</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="7.62x39 мм">
+          <img class="acc-thumb" src="images/1614699317_762_1_18f03d6637.png" alt="7.62x39 мм">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/7-62x39-мм-715.html">7.62x39 мм</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Промежуточный патрон 7.62x39 мммм . Используется в некоторых винтовках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (4):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/cr-527-917.html">CR-527</a><a class="compat-chip" href="weapons/бк-18-919.html">БК-18</a><a class="compat-chip" href="weapons/ка-м-905.html">КА-М</a><a class="compat-chip" href="weapons/ск-59-66-916.html">СК 59/66</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="7.62x54 мм">
+          <img class="acc-thumb" src="images/1565361087_160px-ammo_762x54_803c429b8d.png" alt="7.62x54 мм">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/7-62x54-мм-717.html">7.62x54 мм</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Винтовочный патрон 7,62х54 мм. Используется в некоторых винтовках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (4):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/вс-89-2224.html">ВС-89</a><a class="compat-chip" href="weapons/всд-2677.html">ВСД</a><a class="compat-chip" href="weapons/всд-913.html">ВСД</a><a class="compat-chip" href="weapons/винтовка-мосин-91-30-914.html">Винтовка Мосин 91/30</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="9x19 мм">
+          <img class="acc-thumb" src="images/1564497948_250px-ammo_9x19_5dfb7ecd7e.png" alt="9x19 мм">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/9x19-мм-710.html">9x19 мм</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Пистолетный патрон 9х19 мм. Используется в некоторых пистолетах и ПП...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (4):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/cr-75-900.html">CR-75</a><a class="compat-chip" href="weapons/mlock-91-945.html">MLOCK-91</a><a class="compat-chip" href="weapons/p1-1674.html">P1</a><a class="compat-chip" href="weapons/sg5-k-902.html">SG5-K</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="9x39 мм">
+          <img class="acc-thumb" src="images/1565361655_1564498813_209px-ammo_9x39_2b443b335d.png" alt="9x39 мм">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/9x39-мм-719.html">9x39 мм</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Промежуточный патрон 9х39 мм. Используется в некоторых винтовках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/всс-910.html">ВСС</a><a class="compat-chip" href="weapons/вихрь-2142.html">Вихрь</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="atog">
+          <img class="acc-thumb" src="images/1623508387_11_2ebc206ae2.png" alt="ATOG">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/atog-778.html">ATOG</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Стандартный реечный 4-кратный прицел с тритиевой подсветкой сетки, разработан для автомата М4-А1...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (12):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/dmr-2099.html">DMR</a><a class="compat-chip" href="weapons/lar-909.html">LAR</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/pioneer-1456.html">Pioneer</a><a class="compat-chip" href="weapons/r12-2783.html">R12</a><a class="compat-chip" href="weapons/scr-17-2976.html">SCR 17</a><a class="compat-chip" href="weapons/sg5-k-902.html">SG5-K</a><a class="compat-chip" href="weapons/usg-45-903.html">USG-45</a><a class="compat-chip" href="weapons/арбалет-1885.html">Арбалет</a><a class="compat-chip" href="weapons/вс-89-2224.html">ВС-89</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="atog x6">
+          <img class="acc-thumb" src="images/1623975535_44_c0d3507e8a.png" alt="ATOG x6">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/atog-x6-1532.html">ATOG x6</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Стандартный реечный 6-кратный прицел. Предназначен для западных снайперских винтовок. На верхней рейке..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (12):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/dmr-2099.html">DMR</a><a class="compat-chip" href="weapons/lar-909.html">LAR</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/pioneer-1456.html">Pioneer</a><a class="compat-chip" href="weapons/r12-2783.html">R12</a><a class="compat-chip" href="weapons/scr-17-2976.html">SCR 17</a><a class="compat-chip" href="weapons/sg5-k-902.html">SG5-K</a><a class="compat-chip" href="weapons/usg-45-903.html">USG-45</a><a class="compat-chip" href="weapons/арбалет-1885.html">Арбалет</a><a class="compat-chip" href="weapons/вс-89-2224.html">ВС-89</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="nv-pvs4">
+          <img class="acc-thumb" src="images/1630611114_optic_pnv_24f3728fb6.png" alt="NV-PVS4">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/nv-pvs4-1558.html">NV-PVS4</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Стандартный реечный прицел ночного видения с 3,5-кратным увеличением. Работает от батареи 9В. Известен среди..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (12):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/dmr-2099.html">DMR</a><a class="compat-chip" href="weapons/lar-909.html">LAR</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/pioneer-1456.html">Pioneer</a><a class="compat-chip" href="weapons/r12-2783.html">R12</a><a class="compat-chip" href="weapons/scr-17-2976.html">SCR 17</a><a class="compat-chip" href="weapons/sg5-k-902.html">SG5-K</a><a class="compat-chip" href="weapons/usg-45-903.html">USG-45</a><a class="compat-chip" href="weapons/арбалет-1885.html">Арбалет</a><a class="compat-chip" href="weapons/вс-89-2224.html">ВС-89</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="барабанный магазин вайга на 20 пат.">
+          <img class="acc-thumb" src="images/1677272485_1572642270_1565958570_cr752_4085a77e13.png" alt="Барабанный магазин Вайга на 20 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/барабанный-магазин-вайга-на-20-пат-1059.html">Барабанный магазин Вайга на 20 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный барабанный магазин для дробовика Вайга . Вмещает до 20 патронов калибра 12 калибра..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/вайга-1056.html">Вайга</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="барабанный магазин ка-м на 75 пат.">
+          <img class="acc-thumb" src="images/1574548785_bez-imeni-51_2c67d98b1c.png" alt="Барабанный магазин КА-М на 75 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/барабанный-магазин-ка-м-на-75-пат-742.html">Барабанный магазин КА-М на 75 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный барабанный магазин для автомата..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/ка-м-905.html">КА-М</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="болт">
+          <img class="acc-thumb" src="images/bolt_894fcd672d.png" alt="Болт">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/болт-1886.html">Болт</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Похожий на стрелу снаряд, используемый арбалетчиками. В основном сделан из углеродного волокна, за..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/арбалет-1885.html">Арбалет</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="бронебойные патроны 9х39 мм">
+          <img class="acc-thumb" src="images/1565361614_1564506773_209px-ammo_9x39ap_4893fdd97a.png" alt="Бронебойные патроны 9х39 мм">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/бронебойные-патроны-9х39-мм-1809.html">Бронебойные патроны 9х39 мм</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Промежуточный бронебойный патрон 9х39 мм. Используется в некоторых винтовках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/всс-910.html">ВСС</a><a class="compat-chip" href="weapons/вихрь-2142.html">Вихрь</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="голографический прицел">
+          <img class="acc-thumb" src="images/pricel1_84c2115466.png" alt="Голографический прицел">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/голографический-прицел-2979.html">Голографический прицел</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Стандартный реечный голографический прицел без увеличения с устройством освещения сетки на батарейке...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (12):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/dmr-2099.html">DMR</a><a class="compat-chip" href="weapons/lar-909.html">LAR</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/pioneer-1456.html">Pioneer</a><a class="compat-chip" href="weapons/r12-2783.html">R12</a><a class="compat-chip" href="weapons/scr-17-2976.html">SCR 17</a><a class="compat-chip" href="weapons/sg5-k-902.html">SG5-K</a><a class="compat-chip" href="weapons/usg-45-903.html">USG-45</a><a class="compat-chip" href="weapons/арбалет-1885.html">Арбалет</a><a class="compat-chip" href="weapons/вс-89-2224.html">ВС-89</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="импровизированный болт">
+          <img class="acc-thumb" src="images/bolt-kraft_5d43f21b45.png" alt="Импровизированный болт">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/импровизированный-болт-1887.html">Импровизированный болт</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Похожий на стрелу снаряд, используемый арбалетчиками. Сделано по необходимости и немного по доброй воле...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/арбалет-1885.html">Арбалет</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="импровизированный улуч.болт">
+          <img class="acc-thumb" src="images/bolt-kraft-s-perjami_ef601982bb.png" alt="Импровизированный улуч.болт">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/импровизированный-улуч-болт-1889.html">Импровизированный улуч.болт</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Похожий на стрелу снаряд, используемый арбалетчиками. Сделано по необходимости и немного по доброй воле...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/арбалет-1885.html">Арбалет</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="коллиматор кобра">
+          <img class="acc-thumb" src="images/1623510059_5_fa1d9f52d4.png" alt="Коллиматор Кобра">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/коллиматор-кобра-814.html">Коллиматор Кобра</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Крепящийся сбоку прицел без увеличения с устройством освещения сетки на батарейке . Разработан для автоматов..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (9):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/бизон-1621.html">Бизон</a><a class="compat-chip" href="weapons/всд-2677.html">ВСД</a><a class="compat-chip" href="weapons/всд-913.html">ВСД</a><a class="compat-chip" href="weapons/всс-910.html">ВСС</a><a class="compat-chip" href="weapons/вайга-1056.html">Вайга</a><a class="compat-chip" href="weapons/вихрь-2142.html">Вихрь</a><a class="compat-chip" href="weapons/ка-101-907.html">КА-101</a><a class="compat-chip" href="weapons/ка-74-906.html">КА-74</a><a class="compat-chip" href="weapons/ка-м-905.html">КА-М</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин cr-550, 10 пат.">
+          <img class="acc-thumb" src="images/1677270590_1648061764_cr550_mag_a64a03b85b.png" alt="Магазин CR-550, 10 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-cr-550-10-пат-1676.html">Магазин CR-550, 10 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный магазин для винтовки CR-550. Вмещает до 10 патронов калибра .308 WIN...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/cr-550-savanna-1673.html">CR-550 Savanna</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин dmr, 10 пат.">
+          <img class="acc-thumb" src="images/magazin-na-dmr-na-10-pat_7b045dd9cb.png" alt="Магазин DMR, 10 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-dmr-10-пат-2100.html">Магазин DMR, 10 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный магазин для винтовки DMR. Вмещает до 10 патронов калибра .308 WIN...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/dmr-2099.html">DMR</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин dmr, 20 пат.">
+          <img class="acc-thumb" src="images/magazin-na-dmr-na-20-pat-1_e2a937ab84.png" alt="Магазин DMR, 20 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-dmr-20-пат-2101.html">Магазин DMR, 20 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный магазин для винтовки DMR. Вмещает до 20 патронов калибра .308 WIN...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/dmr-2099.html">DMR</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин kа-101 на 30 пат.">
+          <img class="acc-thumb" src="images/1565961885_ak101_07e5d37627.png" alt="Магазин KА-101 на 30 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-kа-101-на-30-пат-735.html">Магазин KА-101 на 30 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для автомата КА-101. Вмещает до 30 патронов калибра 5.56мм..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/ка-101-907.html">КА-101</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин le-mas на 25 пат.">
+          <img class="acc-thumb" src="images/1677271218_1630609842_famasmag_0bfcc2b06b.png" alt="Магазин LE-MAS на 25 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-le-mas-на-25-пат-1557.html">Магазин LE-MAS на 25 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для автомата LE-MAS. Вмещает до 25 патронов калибра 5,56х45 мм...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/le-mas-1556.html">LE-MAS</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин scr 17, 20 пат.">
+          <img class="acc-thumb" src="images/scar_mag1_6152eb1b93.png" alt="Магазин SCR 17, 20 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-scr-17-20-пат-2983.html">Магазин SCR 17, 20 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для боевой винтовки SCR 17. Вмещает до 20 патронов калибра .308 WIN...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/scr-17-2976.html">SCR 17</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин ssg 82, 5 пат.">
+          <img class="acc-thumb" src="images/1677269785_dayz-magazin-dlja-ssg-82_8361041f35.png" alt="Магазин SSG 82, 5 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-ssg-82-5-пат-1762.html">Магазин SSG 82, 5 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный магазин для винтовки SSG 82. Вмещает до 5 патронов калибра 5,45х39 мм...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/ssg-82-1759.html">SSG 82</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин бизон на 64 пат.">
+          <img class="acc-thumb" src="images/1677270698_1643297050_3_4c8817cba8.png" alt="Магазин Бизон на 64 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-бизон-на-64-пат-1623.html">Магазин Бизон на 64 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Необычный съемный шнековый магазин. Вмещает до 64 патронов калибра .380 AСР...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/бизон-1621.html">Бизон</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин вихрь на 30 пат.">
+          <img class="acc-thumb" src="images/vikhr_mag2_629bdc7ab5.png" alt="Магазин Вихрь на 30 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-вихрь-на-30-пат-2143.html">Магазин Вихрь на 30 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный магазин на 30 патронов калибра 9х39 мм. Может использоваться с другим оружием, стреляющим теми же..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/всс-910.html">ВСС</a><a class="compat-chip" href="weapons/вихрь-2142.html">Вихрь</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин ка-74 на 30 пат.">
+          <img class="acc-thumb" src="images/1677312842_1565960185_ak74_ffb7e47967.png" alt="Магазин КА-74 на 30 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-ка-74-на-30-пат-734.html">Магазин КА-74 на 30 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для автомата КА-74 . Вмещает до 30 патронов калибра 5.45мм ...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (2):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/ка-74-906.html">КА-74</a><a class="compat-chip" href="weapons/кас-74у-939.html">КАС-74У</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин ка-74 на 45 пат.">
+          <img class="acc-thumb" src="images/1677271436_1623975986_333_00f00ccf67.png" alt="Магазин КА-74 на 45 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-ка-74-на-45-пат-1531.html">Магазин КА-74 на 45 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для автомата КА-74 . Вмещает до 45 патронов калибра 5.45мм ...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (2):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/ка-74-906.html">КА-74</a><a class="compat-chip" href="weapons/кас-74у-939.html">КАС-74У</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин р1, 8 пат.">
+          <img class="acc-thumb" src="images/1677270301_1648062612_p1_mag_4d575e14dd.png" alt="Магазин Р1, 8 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-р1-8-пат-1677.html">Магазин Р1, 8 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для пистолета P1. P1. Вмещает до 8 патронов калибра 9х19 мм...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/p1-1674.html">P1</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для aur на 30 пат.">
+          <img class="acc-thumb" src="images/1677270894_1636051721_1624201331_302_64be01f504.png" alt="Магазин для AUR на 30 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-aur-на-30-пат-1595.html">Магазин для AUR на 30 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для автоматов AUR. Вмещает до 30 патронов калибра 5,56х45 мм...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (2):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-a1-1593.html">AUR A1</a><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для cr-527 на 5 пат">
+          <img class="acc-thumb" src="images/1677312446_1565959442_cr527_60cd4be603.png" alt="Магазин для CR-527 на 5 пат">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-cr-527-на-5-пат-743.html">Магазин для CR-527 на 5 пат</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный магазин для винтовки..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/cr-527-917.html">CR-527</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для cr-61">
+          <img class="acc-thumb" src="images/1565958913_sr-61_13f6671334.png" alt="Магазин для CR-61">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-cr-61-806.html">Магазин для CR-61</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для пистолета-пулемета CR-61 Skorpion. Вмещает до 20 патронов калибра .380 ACP...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/cr-61-904.html">CR-61</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для cr-75 на 15 пат.">
+          <img class="acc-thumb" src="images/1565958570_cr75_8306fb1aec.png" alt="Магазин для CR-75 на 15 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-cr-75-на-15-пат-727.html">Магазин для CR-75 на 15 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный магазин для пистолета CR75. Вмещает до 15 патронов калибра 9x19 мм...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/cr-75-900.html">CR-75</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для deagle на 9 пат.">
+          <img class="acc-thumb" src="images/1677272071_1624058590_213_8f14f6c03f.png" alt="Магазин для Deagle на 9 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-deagle-на-9-пат-1257.html">Магазин для Deagle на 9 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для пистолета Deagle. Вмещает до 9 патронов калибра .357...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/deagle-1255.html">DEAGLE</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для fx-45 на 15 пат.">
+          <img class="acc-thumb" src="images/1565959708_fx45_5804bf5e4f.png" alt="Магазин для FX-45 на 15 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-fx-45-на-15-пат-732.html">Магазин для FX-45 на 15 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для пистолета FX-45. Вмещает до 15 патронов калибра .45 ACP...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/fx-45-901.html">FX-45</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для kolt 1911 на 7 пат.">
+          <img class="acc-thumb" src="images/1677272874_1572641487_1565958570_cr75_6bf0b76484.png" alt="Магазин для Kolt 1911 на 7 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-kolt-1911-на-7-пат-1055.html">Магазин для Kolt 1911 на 7 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для пистолета Kolt 1911. Вмещает до 7 патронов калибра .45 ACP..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/kolt-1911-1054.html">KOLT 1911</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для lar на 20 пат.">
+          <img class="acc-thumb" src="images/1677312260_1565966151_fall_27364e4c2e.png" alt="Магазин для LAR на 20 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-lar-на-20-пат-803.html">Магазин для LAR на 20 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для автомата LAR . Вмещает до 20 патронов калибра .308Win ...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/lar-909.html">LAR</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для mk ii на 10 пат.">
+          <img class="acc-thumb" src="images/1565983820_1565961885_ak101_49c788f6ed.png" alt="Магазин для MK II на 10 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-mk-ii-на-10-пат-720.html">Магазин для MK II на 10 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для пистолета MK II. Вмещает до 10 патронов калибра 22 Long Rifle...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/mk-ii-943.html">MK II</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для mlock-91 на 15пат.">
+          <img class="acc-thumb" src="images/1565967429_glock_917ec97859.png" alt="Магазин для MLOCK-91 на 15пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-mlock-91-на-15пат-946.html">Магазин для MLOCK-91 на 15пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный магазин для пистолета . Вмещает до 15 патронов калибра 9x19 мм...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/mlock-91-945.html">MLOCK-91</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для mag-c на 10 пат">
+          <img class="acc-thumb" src="images/1624201574_101_945e394318.png" alt="Магазин для Mag-C на 10 пат">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-mag-c-на-10-пат-737.html">Магазин для Mag-C на 10 пат</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный неоригинальный коробчатый магазин, подходящий для автоматов, состоящих на вооружении сил альянса...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/м16-а2-1530.html">М16-А2</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для mag-c на 20 пат">
+          <img class="acc-thumb" src="images/1624201516_201_1f7ee0dd9a.png" alt="Магазин для Mag-C на 20 пат">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-mag-c-на-20-пат-738.html">Магазин для Mag-C на 20 пат</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный неоригинальный коробчатый магазин, подходящий для автоматов, состоящих на вооружении сил альянса...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/м16-а2-1530.html">М16-А2</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для mag-c на 30 пат.">
+          <img class="acc-thumb" src="images/1624201456_30_f45c89035a.png" alt="Магазин для Mag-C на 30 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-mag-c-на-30-пат-1099.html">Магазин для Mag-C на 30 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный неоригинальный коробчатый магазин, подходящий для автоматов, состоящих на вооружении сил альянса...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/м16-а2-1530.html">М16-А2</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для mag-c на 40 пат.">
+          <img class="acc-thumb" src="images/1624201411_401_71d50ea971.png" alt="Магазин для Mag-C на 40 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-mag-c-на-40-пат-739.html">Магазин для Mag-C на 40 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный неоригинальный коробчатый магазин, подходящий для автоматов, состоящих на вооружении сил альянса...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/м16-а2-1530.html">М16-А2</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для pioneer на 5 пат.">
+          <img class="acc-thumb" src="images/1677271786_1617310749_skrinshot-31-03-20_3a53a650ce.png" alt="Магазин для Pioneer на 5 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-pioneer-на-5-пат-1463.html">Магазин для Pioneer на 5 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин, подходящий для винтовки Pioneer. Вмещает до 5 патронов калибра 5.56x45 мм ...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/pioneer-1456.html">Pioneer</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для rak-37 на 15 пат.">
+          <img class="acc-thumb" src="images/1744727270_15_b03bedf006.png" alt="Магазин для RAK-37 на 15 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-rak-37-на-15-пат-2767.html">Магазин для RAK-37 на 15 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для пистолета-пулемета RAK-37 . Вмещает до 15 патронов калибра .380 ACP...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/rak-37-2765.html">RAK-37</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для rak-37 на 25 пат.">
+          <img class="acc-thumb" src="images/1744727217_22_a5ce2f802d.png" alt="Магазин для RAK-37 на 25 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-rak-37-на-25-пат-2766.html">Магазин для RAK-37 на 25 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для пистолета-пулемета RAK-37 . Вмещает до 25 патронов калибра .380 ACP...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/rak-37-2765.html">RAK-37</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для sg5-k на 15 пат.">
+          <img class="acc-thumb" src="images/1574549699_bez-imeni-51_2e261ae4f0.png" alt="Магазин для SG5-K на 15 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-sg5-k-на-15-пат-1098.html">Магазин для SG5-K на 15 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для пистолета-пулемета..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/sg5-k-902.html">SG5-K</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для sg5-k на 30 пат.">
+          <img class="acc-thumb" src="images/1565957311_mp5k-30_69a2fd30f3.png" alt="Магазин для SG5-K на 30 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-sg5-k-на-30-пат-729.html">Магазин для SG5-K на 30 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для пистолета-пулемета SG5-K . Вмещает до 30 патронов калибра 9мм ...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/sg5-k-902.html">SG5-K</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для sporter 22 на 15 пат.">
+          <img class="acc-thumb" src="images/1677272320_1592314656_22_47f0362572.png" alt="Магазин для Sporter 22 на 15 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-sporter-22-на-15-пат-1214.html">Магазин для Sporter 22 на 15 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для винтовки Sporter 22. Вмещает до 15 патронов калибра 22 Long Rifle...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/sporter-22-1212.html">Sporter 22</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для sporter 22 на 30 пат.">
+          <img class="acc-thumb" src="images/1677272201_1592314851_33_c7afb81df9.png" alt="Магазин для Sporter 22 на 30 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-sporter-22-на-30-пат-1215.html">Магазин для Sporter 22 на 30 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для винтовки Sporter 22. Вмещает до 30 патронов калибра 22 Long Rifle...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/sporter-22-1212.html">Sporter 22</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для usg-45 на 25 пат.">
+          <img class="acc-thumb" src="images/1677338556_1565966566_usg_aa94db1323.png" alt="Магазин для USG-45 на 25 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-usg-45-на-25-пат-804.html">Магазин для USG-45 на 25 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для пистолета-пулемета USG-45 . Вмещает до 25 патронов калибра .45ACP ...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/usg-45-903.html">USG-45</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для вс-89 на 10 пат.">
+          <img class="acc-thumb" src="images/bez-imeni-22_8b95f4ee97.png" alt="Магазин для ВС-89 на 10 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-вс-89-на-10-пат-2225.html">Магазин для ВС-89 на 10 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный магазин для винтовки ВС-89. Вмещает до 10 патронов формата 7.62х54...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/вс-89-2224.html">ВС-89</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для всд на 10 пат.">
+          <img class="acc-thumb" src="images/1677312106_1565965061_svd_328b3c394a.png" alt="Магазин для ВСД на 10 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-всд-на-10-пат-807.html">Магазин для ВСД на 10 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для снайперской винтовки ВСД. Вмещает до 10 патронов калибра 7.62x54 мм...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (2):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/всд-2677.html">ВСД</a><a class="compat-chip" href="weapons/всд-913.html">ВСД</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для всс на 10 пат.">
+          <img class="acc-thumb" src="images/1677312367_1565966291_vss_2351e70a92.png" alt="Магазин для ВСС на 10 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-всс-на-10-пат-747.html">Магазин для ВСС на 10 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для снайперской винтовки ВСС . Вмещает до 10 патронов калибра 9x39 мм ...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/всс-910.html">ВСС</a><a class="compat-chip" href="weapons/вихрь-2142.html">Вихрь</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для вайга на 5 пат.">
+          <img class="acc-thumb" src="images/1677272769_1572641789_1565958570_cr75_7ca5a5831b.png" alt="Магазин для Вайга на 5 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-вайга-на-5-пат-1057.html">Магазин для Вайга на 5 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для дробовика Вайга. Вмещает до 5 пат...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/вайга-1056.html">Вайга</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для вайга на 8 пат.">
+          <img class="acc-thumb" src="images/1677272629_1572642008_1565958570_cr751_dfad6a5361.png" alt="Магазин для Вайга на 8 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-вайга-на-8-пат-1058.html">Магазин для Вайга на 8 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для дробовика Вайга . Вмещает до 8 пат...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/вайга-1056.html">Вайга</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для иж-70 на 12 пат.">
+          <img class="acc-thumb" src="images/1565957758_izh70_4dbbd9d4bf.png" alt="Магазин для ИЖ-70 на 12 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-иж-70-на-12-пат-724.html">Магазин для ИЖ-70 на 12 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный магазин для пистолета ИЖ-70. Вмещает до 12 патронов калибра .380 ACP...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/иж-70-898.html">ИЖ-70</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для ка-м на 30 пат.">
+          <img class="acc-thumb" src="images/1565961013_akm_2017317419.png" alt="Магазин для КА-М на 30 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-ка-м-на-30-пат-741.html">Магазин для КА-М на 30 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для автомата КА-М . Вмещает до 30 патронов калибра 7.62x39 мм ...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/ка-м-905.html">КА-М</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="магазин для свал на 20 пат.">
+          <img class="acc-thumb" src="images/1677271935_1624047365_333_f8fad54161.png" alt="Магазин для Свал на 20 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/магазин-для-свал-на-20-пат-1443.html">Магазин для Свал на 20 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный коробчатый магазин для снайперских винтовок СВАЛ и ВСС. Вмещает до 20 патронов калибра 9x39 мм...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/всс-910.html">ВСС</a><a class="compat-chip" href="weapons/вихрь-2142.html">Вихрь</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="марксманский прицел">
+          <img class="acc-thumb" src="images/22_a41dc1c6d6.png" alt="Марксманский прицел">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/марксманский-прицел-2763.html">Марксманский прицел</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Стандартный оптический прицел с переменным увеличением от 3,5 до 10 крат и сеткой MilDot. Этот надежный..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (12):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/dmr-2099.html">DMR</a><a class="compat-chip" href="weapons/lar-909.html">LAR</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/pioneer-1456.html">Pioneer</a><a class="compat-chip" href="weapons/r12-2783.html">R12</a><a class="compat-chip" href="weapons/scr-17-2976.html">SCR 17</a><a class="compat-chip" href="weapons/sg5-k-902.html">SG5-K</a><a class="compat-chip" href="weapons/usg-45-903.html">USG-45</a><a class="compat-chip" href="weapons/арбалет-1885.html">Арбалет</a><a class="compat-chip" href="weapons/вс-89-2224.html">ВС-89</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="мини-прицел (mrds)">
+          <img class="acc-thumb" src="images/1623510008_2_aedb683321.png" alt="Мини-прицел (MRDS)">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/мини-прицел-mrds-787.html">Мини-прицел (MRDS)</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Крепящийся прицел без увеличения с устройством освещения сетки на батарейке. Предназначен для использования..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (6):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/cr-75-900.html">CR-75</a><a class="compat-chip" href="weapons/deagle-1255.html">DEAGLE</a><a class="compat-chip" href="weapons/fx-45-901.html">FX-45</a><a class="compat-chip" href="weapons/longhorn-1675.html">Longhorn</a><a class="compat-chip" href="weapons/mlock-91-945.html">MLOCK-91</a><a class="compat-chip" href="weapons/бк-133-920.html">БК-133</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="оптический прицел (охотничий)">
+          <img class="acc-thumb" src="images/1564398990_pricel-ohotnichiy_12a3b18ee1.png" alt="Оптический прицел (Охотничий)">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/оптический-прицел-охотничий-789.html">Оптический прицел (Охотничий)</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Крепящийся охотничий прицел с переменным 4-,8- и 12-кратным увеличением. Простой, надежный и точный...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (5):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/blaze-1062.html">BLAZE</a><a class="compat-chip" href="weapons/cr-527-917.html">CR-527</a><a class="compat-chip" href="weapons/cr-550-savanna-1673.html">CR-550 Savanna</a><a class="compat-chip" href="weapons/m70-tundra-918.html">M70 Tundra</a><a class="compat-chip" href="weapons/sporter-22-1212.html">Sporter 22</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="оружейный прицел m68">
+          <img class="acc-thumb" src="images/1623508408_10_7f0917e05e.png" alt="Оружейный прицел M68">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/оружейный-прицел-m68-779.html">Оружейный прицел M68</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Стандартный реечный прицел без увеличения с устройством освещения сетки на батарейке . Разработан для..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (12):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/dmr-2099.html">DMR</a><a class="compat-chip" href="weapons/lar-909.html">LAR</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/pioneer-1456.html">Pioneer</a><a class="compat-chip" href="weapons/r12-2783.html">R12</a><a class="compat-chip" href="weapons/scr-17-2976.html">SCR 17</a><a class="compat-chip" href="weapons/sg5-k-902.html">SG5-K</a><a class="compat-chip" href="weapons/usg-45-903.html">USG-45</a><a class="compat-chip" href="weapons/арбалет-1885.html">Арбалет</a><a class="compat-chip" href="weapons/вс-89-2224.html">ВС-89</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="патрон 12 калибра с нарезами">
+          <img class="acc-thumb" src="images/1565361347_1564506470_166px-ammo_12gaslu_f0cb1a11ef.png" alt="Патрон 12 калибра с нарезами">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/патрон-12-калибра-с-нарезами-1269.html">Патрон 12 калибра с нарезами</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Патрон 12 калибра с одним нарезом. Используется в дробовиках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (5):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/r12-2783.html">R12</a><a class="compat-chip" href="weapons/бк-12-1763.html">БК-12</a><a class="compat-chip" href="weapons/бк-133-920.html">БК-133</a><a class="compat-chip" href="weapons/бк-43-1061.html">БК-43</a><a class="compat-chip" href="weapons/вайга-1056.html">Вайга</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="патроны 22 lr">
+          <img class="acc-thumb" src="images/1565914433_22-rnd-1_7f2aa7e6f3.png" alt="Патроны 22 LR">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/патроны-22-lr-944.html">Патроны 22 LR</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Пистолетный патрон .22 Long Rifle. Также известный как 22 LR. Используется в некоторых пистолетах...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (2):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/mk-ii-943.html">MK II</a><a class="compat-chip" href="weapons/sporter-22-1212.html">Sporter 22</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="патроны 380 acp">
+          <img class="acc-thumb" src="images/1564497835_250px-ammo_380_8017bd66ab.png" alt="Патроны 380 ACP">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/патроны-380-acp-709.html">Патроны 380 ACP</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Пистолетный патрон .380 ACP. Используется в некоторых пистолетах и ПП...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (4):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/cr-61-904.html">CR-61</a><a class="compat-chip" href="weapons/rak-37-2765.html">RAK-37</a><a class="compat-chip" href="weapons/бизон-1621.html">Бизон</a><a class="compat-chip" href="weapons/иж-70-898.html">ИЖ-70</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="патроны 45 acp">
+          <img class="acc-thumb" src="images/1564498050_250px-ammo_45acp_d16a7fc0a9.png" alt="Патроны 45 ACP">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/патроны-45-acp-711.html">Патроны 45 ACP</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Пистолетный патрон .45 ACP. Используется в некоторых пистолетах и ПП...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/fx-45-901.html">FX-45</a><a class="compat-chip" href="weapons/kolt-1911-1054.html">KOLT 1911</a><a class="compat-chip" href="weapons/usg-45-903.html">USG-45</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="пистолетный прицел">
+          <img class="acc-thumb" src="images/1597876871_digl_pricel_6cc19eee31.png" alt="Пистолетный прицел">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/пистолетный-прицел-1259.html">Пистолетный прицел</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Установленный 1,8-кратный увеличительный пистолетный прицел. Подходит для крепления на крупнокалиберных..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (2):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/deagle-1255.html">DEAGLE</a><a class="compat-chip" href="weapons/longhorn-1675.html">Longhorn</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="плм. магазин ка-м, 30 пат.">
+          <img class="acc-thumb" src="images/dayz-kobura-dlja-bronedileta3-1_14bc5fa55f.png" alt="Плм. магазин КА-М, 30 пат.">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/плм-магазин-ка-м-30-пат-1963.html">Плм. магазин КА-М, 30 пат.</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Съемный полимерный магазин для автомата КА-М. Вмещает до 30 патронов калибра 7,62х39 мм...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/ка-м-905.html">КА-М</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="прицел 1pn51">
+          <img class="acc-thumb" src="images/1732187173_1_10d6342368.png" alt="Прицел 1PN51">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/прицел-1pn51-897.html">Прицел 1PN51</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Крепящийся сбоку 3,5-кратный прицел с устройством ночного видения на батарейке. Разработан для автоматов..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (9):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/бизон-1621.html">Бизон</a><a class="compat-chip" href="weapons/всд-2677.html">ВСД</a><a class="compat-chip" href="weapons/всд-913.html">ВСД</a><a class="compat-chip" href="weapons/всс-910.html">ВСС</a><a class="compat-chip" href="weapons/вайга-1056.html">Вайга</a><a class="compat-chip" href="weapons/вихрь-2142.html">Вихрь</a><a class="compat-chip" href="weapons/ка-101-907.html">КА-101</a><a class="compat-chip" href="weapons/ка-74-906.html">КА-74</a><a class="compat-chip" href="weapons/ка-м-905.html">КА-М</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="прицел baraka">
+          <img class="acc-thumb" src="images/1623508437_9_e1fdc3ed03.png" alt="Прицел Baraka">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/прицел-baraka-780.html">Прицел Baraka</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Стандартный реечный прицел без увеличения с устройством освещения сетки на батарейке ...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (12):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/dmr-2099.html">DMR</a><a class="compat-chip" href="weapons/lar-909.html">LAR</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/pioneer-1456.html">Pioneer</a><a class="compat-chip" href="weapons/r12-2783.html">R12</a><a class="compat-chip" href="weapons/scr-17-2976.html">SCR 17</a><a class="compat-chip" href="weapons/sg5-k-902.html">SG5-K</a><a class="compat-chip" href="weapons/usg-45-903.html">USG-45</a><a class="compat-chip" href="weapons/арбалет-1885.html">Арбалет</a><a class="compat-chip" href="weapons/вс-89-2224.html">ВС-89</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="прицел p1-87-l (каштан с-1)">
+          <img class="acc-thumb" src="images/1623510047_13_558f7d2fe8.png" alt="Прицел P1-87-L (Каштан С-1)">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/прицел-p1-87-l-каштан-с-1-786.html">Прицел P1-87-L (Каштан С-1)</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Прицел ближнего действия с 2,8-кратным увеличением. Совместим с винтовкой КА...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (9):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/бизон-1621.html">Бизон</a><a class="compat-chip" href="weapons/всд-2677.html">ВСД</a><a class="compat-chip" href="weapons/всд-913.html">ВСД</a><a class="compat-chip" href="weapons/всс-910.html">ВСС</a><a class="compat-chip" href="weapons/вайга-1056.html">Вайга</a><a class="compat-chip" href="weapons/вихрь-2142.html">Вихрь</a><a class="compat-chip" href="weapons/ка-101-907.html">КА-101</a><a class="compat-chip" href="weapons/ка-74-906.html">КА-74</a><a class="compat-chip" href="weapons/ка-м-905.html">КА-М</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="прицел rvn">
+          <img class="acc-thumb" src="images/1623508493_8_3124266506.png" alt="Прицел RVN">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/прицел-rvn-781.html">Прицел RVN</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Стандартный реечный прицел без увеличения с устройством освещения сетки на батарейке...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (12):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/dmr-2099.html">DMR</a><a class="compat-chip" href="weapons/lar-909.html">LAR</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/pioneer-1456.html">Pioneer</a><a class="compat-chip" href="weapons/r12-2783.html">R12</a><a class="compat-chip" href="weapons/scr-17-2976.html">SCR 17</a><a class="compat-chip" href="weapons/sg5-k-902.html">SG5-K</a><a class="compat-chip" href="weapons/usg-45-903.html">USG-45</a><a class="compat-chip" href="weapons/арбалет-1885.html">Арбалет</a><a class="compat-chip" href="weapons/вс-89-2224.html">ВС-89</a><a class="compat-chip" href="weapons/свал-1442.html">СВАЛ</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="прицел псо 1-1">
+          <img class="acc-thumb" src="images/1623509934_1-1_b2361b3e1b.png" alt="Прицел ПСО 1-1">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/прицел-псо-1-1-784.html">Прицел ПСО 1-1</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Крепящийся сбоку 4-кратный прицел с устройством освещения сетки на батарейке . Откалиброван для снайперской..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (9):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/бизон-1621.html">Бизон</a><a class="compat-chip" href="weapons/всд-2677.html">ВСД</a><a class="compat-chip" href="weapons/всд-913.html">ВСД</a><a class="compat-chip" href="weapons/всс-910.html">ВСС</a><a class="compat-chip" href="weapons/вайга-1056.html">Вайга</a><a class="compat-chip" href="weapons/вихрь-2142.html">Вихрь</a><a class="compat-chip" href="weapons/ка-101-907.html">КА-101</a><a class="compat-chip" href="weapons/ка-74-906.html">КА-74</a><a class="compat-chip" href="weapons/ка-м-905.html">КА-М</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="прицел псо-1">
+          <img class="acc-thumb" src="images/1623509934_1_8f208638b5.png" alt="Прицел ПСО-1">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/прицел-псо-1-785.html">Прицел ПСО-1</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Крепящийся сбоку 4-кратный прицел с устройством освещения сетки на батарейке. Разработан для автоматов..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (9):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/бизон-1621.html">Бизон</a><a class="compat-chip" href="weapons/всд-2677.html">ВСД</a><a class="compat-chip" href="weapons/всд-913.html">ВСД</a><a class="compat-chip" href="weapons/всс-910.html">ВСС</a><a class="compat-chip" href="weapons/вайга-1056.html">Вайга</a><a class="compat-chip" href="weapons/вихрь-2142.html">Вихрь</a><a class="compat-chip" href="weapons/ка-101-907.html">КА-101</a><a class="compat-chip" href="weapons/ка-74-906.html">КА-74</a><a class="compat-chip" href="weapons/ка-м-905.html">КА-М</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="прицел псо-6">
+          <img class="acc-thumb" src="images/1744726269_3_18a63a9553.png" alt="Прицел ПСО-6">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/прицел-псо-6-2762.html">Прицел ПСО-6</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Крепящийся сбоку 6-кратный прицел с устройством освещения сетки на батарейке. Разработан для автоматов..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (9):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/бизон-1621.html">Бизон</a><a class="compat-chip" href="weapons/всд-2677.html">ВСД</a><a class="compat-chip" href="weapons/всд-913.html">ВСД</a><a class="compat-chip" href="weapons/всс-910.html">ВСС</a><a class="compat-chip" href="weapons/вайга-1056.html">Вайга</a><a class="compat-chip" href="weapons/вихрь-2142.html">Вихрь</a><a class="compat-chip" href="weapons/ка-101-907.html">КА-101</a><a class="compat-chip" href="weapons/ка-74-906.html">КА-74</a><a class="compat-chip" href="weapons/ка-м-905.html">КА-М</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="прицел пу">
+          <img class="acc-thumb" src="images/1623510093_3_46c14be0ca.png" alt="Прицел ПУ">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/прицел-пу-788.html">Прицел ПУ</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Крепящийся сбоку 3.5-кратный прицел с неосвещенной сеткой для винтовки Мосина обр. 1891/30 гг и SK59/66...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (2):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/винтовка-мосин-91-30-914.html">Винтовка Мосин 91/30</a><a class="compat-chip" href="weapons/ск-59-66-916.html">СК 59/66</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="резиновые пули 12 калибра">
+          <img class="acc-thumb" src="images/1580404429_1565361330_1564498639_177px2-_602855a45a.png" alt="Резиновые пули 12 калибра">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/резиновые-пули-12-калибра-1126.html">Резиновые пули 12 калибра</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Резиновые пули 12 калибра. Менее опасны, чем пули с металлическим сердечником. Используются в ружьях...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (5):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/r12-2783.html">R12</a><a class="compat-chip" href="weapons/бк-12-1763.html">БК-12</a><a class="compat-chip" href="weapons/бк-133-920.html">БК-133</a><a class="compat-chip" href="weapons/бк-43-1061.html">БК-43</a><a class="compat-chip" href="weapons/вайга-1056.html">Вайга</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="ружейные патроны 12 калибра">
+          <img class="acc-thumb" src="images/1565361330_1564498639_177px-ammo_12gapel_c6ebebb7f8.png" alt="Ружейные патроны 12 калибра">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/ружейные-патроны-12-калибра-718.html">Ружейные патроны 12 калибра</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Ружейный патрон 12 калибра с 8 дробинками. Используется в дробовиках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (5):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/r12-2783.html">R12</a><a class="compat-chip" href="weapons/бк-12-1763.html">БК-12</a><a class="compat-chip" href="weapons/бк-133-920.html">БК-133</a><a class="compat-chip" href="weapons/бк-43-1061.html">БК-43</a><a class="compat-chip" href="weapons/вайга-1056.html">Вайга</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="сигнальная ракета">
+          <img class="acc-thumb" src="images/1603406555_13_3aab899193.png" alt="Сигнальная ракета">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/сигнальная-ракета-1282.html">Сигнальная ракета</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Осветительный патрон. Используется в сигнальном пистолете. Содержит смесь химикатов, сияющим ярким светом...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (1):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/сигнальный-пистолет-1283.html">Сигнальный пистолет</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Прицелы" data-name="спортивный прицел">
+          <img class="acc-thumb" src="images/1744726555_3_dd0e2da840.png" alt="Спортивный прицел">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/спортивный-прицел-2764.html">Спортивный прицел</a></span>
+              <span class="cat-badge">🎯 Прицелы</span>
+            </div>
+            <div class="acc-desc">Охотничий прицел с 2-кратным увеличением. Прицельная сетка с подсветкой на батарейках обеспечивает простую и..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (5):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/blaze-1062.html">BLAZE</a><a class="compat-chip" href="weapons/cr-527-917.html">CR-527</a><a class="compat-chip" href="weapons/cr-550-savanna-1673.html">CR-550 Savanna</a><a class="compat-chip" href="weapons/m70-tundra-918.html">M70 Tundra</a><a class="compat-chip" href="weapons/sporter-22-1212.html">Sporter 22</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="стандартный магазин на 30 пат">
+          <img class="acc-thumb" src="images/1624201331_302_6b56290d6a.png" alt="Стандартный магазин на 30 пат">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/стандартный-магазин-на-30-пат-736.html">Стандартный магазин на 30 пат</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Стандартный магазин автоматов, состоящих на вооружении сил альянса. Вмещает до 30 патронов калибра 5.56x45..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/м16-а2-1530.html">М16-А2</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Магазины" data-name="стандартный магазин на 60 пат">
+          <img class="acc-thumb" src="images/1677271312_1623974507_123_a9d61f6187.png" alt="Стандартный магазин на 60 пат">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/стандартный-магазин-на-60-пат-1536.html">Стандартный магазин на 60 пат</a></span>
+              <span class="cat-badge">🧰 Магазины</span>
+            </div>
+            <div class="acc-desc">Стандартный магазин для автоматов, состоящих на вооружении сил альянса. Вмещает до 60 патронов калибра..</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/м16-а2-1530.html">М16-А2</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="трассирующие патроны .308 win">
+          <img class="acc-thumb" src="images/1565361815_1564498549_252px-ammo_308wint_59206a621d.png" alt="Трассирующие патроны .308 Win">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/трассирующие-патроны-308-win-1805.html">Трассирующие патроны .308 Win</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Винтовочный патрон .308 WIN с пиротехническим зарядом. Используется в некоторых винтовках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (6):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/blaze-1062.html">BLAZE</a><a class="compat-chip" href="weapons/cr-550-savanna-1673.html">CR-550 Savanna</a><a class="compat-chip" href="weapons/dmr-2099.html">DMR</a><a class="compat-chip" href="weapons/lar-909.html">LAR</a><a class="compat-chip" href="weapons/m70-tundra-918.html">M70 Tundra</a><a class="compat-chip" href="weapons/scr-17-2976.html">SCR 17</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="трассирующие патроны 5,45х39 мм">
+          <img class="acc-thumb" src="images/545-trasser-dayz_c1eb775f28.png" alt="Трассирующие патроны 5,45х39 мм">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/трассирующие-патроны-5-45х39-мм-1808.html">Трассирующие патроны 5,45х39 мм</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Промежуточный патрон 5,45х39 мм с пиротехническим зарядом. Используется в некоторых винтовках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (3):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/ssg-82-1759.html">SSG 82</a><a class="compat-chip" href="weapons/ка-74-906.html">КА-74</a><a class="compat-chip" href="weapons/кас-74у-939.html">КАС-74У</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="трассирующие патроны 5,56х45 мм">
+          <img class="acc-thumb" src="images/556-trasser-dayz-1_f96bb2ab2b.png" alt="Трассирующие патроны 5,56х45 мм">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/трассирующие-патроны-5-56х45-мм-1807.html">Трассирующие патроны 5,56х45 мм</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Промежуточный патрон 5,56х45 мм с пиротехническим зарядом. Используется в некоторых винтовках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (7):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/aur-a1-1593.html">AUR A1</a><a class="compat-chip" href="weapons/aur-ax-1594.html">AUR AX</a><a class="compat-chip" href="weapons/le-mas-1556.html">LE-MAS</a><a class="compat-chip" href="weapons/m4a1-908.html">M4A1</a><a class="compat-chip" href="weapons/pioneer-1456.html">Pioneer</a><a class="compat-chip" href="weapons/ка-101-907.html">КА-101</a><a class="compat-chip" href="weapons/м16-а2-1530.html">М16-А2</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="трассирующие патроны 7,62х39 мм">
+          <img class="acc-thumb" src="images/1614699337_762_44de9e0fa1.png" alt="Трассирующие патроны 7,62х39 мм">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/трассирующие-патроны-7-62х39-мм-1806.html">Трассирующие патроны 7,62х39 мм</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Промежуточный патрон 7,62х39 мм с пиротехническим зарядом. Используется в некоторых винтовках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (4):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/cr-527-917.html">CR-527</a><a class="compat-chip" href="weapons/бк-18-919.html">БК-18</a><a class="compat-chip" href="weapons/ка-м-905.html">КА-М</a><a class="compat-chip" href="weapons/ск-59-66-916.html">СК 59/66</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acc-card" data-cat="Калибр" data-name="трассирующие патроны 7,62х54 мм r">
+          <img class="acc-thumb" src="images/1565361084_180px-ammo_762x54tracer_bcc5281338.png" alt="Трассирующие патроны 7,62х54 мм R">
+          <div class="acc-body">
+            <div class="acc-head">
+              <span class="acc-name"><a href="modules/трассирующие-патроны-7-62х54-мм-r-1804.html">Трассирующие патроны 7,62х54 мм R</a></span>
+              <span class="cat-badge">🔘 Патроны</span>
+            </div>
+            <div class="acc-desc">Винтовочный патрон 7,62х54 мм R с пиротехническим зарядом. Используется в некоторых винтовках...</div>
+            <div class="acc-compat">
+              <span class="acc-compat-label">Сумісно з (4):</span>
+              <div class="compat-list"><a class="compat-chip" href="weapons/вс-89-2224.html">ВС-89</a><a class="compat-chip" href="weapons/всд-2677.html">ВСД</a><a class="compat-chip" href="weapons/всд-913.html">ВСД</a><a class="compat-chip" href="weapons/винтовка-мосин-91-30-914.html">Винтовка Мосин 91/30</a></div>
+            </div>
+          </div>
+        </div>
+  </div>
+</div>
+<footer class="site">Created by Dena</footer>
+<script>
+const cards = Array.from(document.querySelectorAll('.acc-card'));
+const search = document.getElementById('search');
+const countEl = document.getElementById('count');
+const chips = Array.from(document.querySelectorAll('#catFilter .chip'));
+let activeCat = 'all';
+
+function applyFilter() {
+  const q = search.value.trim().toLowerCase();
+  let visible = 0;
+  cards.forEach(c => {
+    const matchesCat = activeCat === 'all' || c.dataset.cat === activeCat;
+    const matchesQ = !q || c.dataset.name.includes(q);
+    const show = matchesCat && matchesQ;
+    c.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  countEl.textContent = visible + ' з ' + cards.length;
+}
+
+chips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    chips.forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeCat = chip.dataset.cat;
+    applyFilter();
+  });
+});
+search.addEventListener('input', applyFilter);
+applyFilter();
+</script>
+</body>
+</html>
