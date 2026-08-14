@@ -166,7 +166,7 @@ footer.site{text-align:center; color:var(--muted); font-size:.8rem; padding:20px
 <header class="site">
   <h1>DayZ - Оружие</h1>
   <div class="sub">53 единиц оружия и метательного/гранатометов</div>
-  <a class="nav-link" href="accessories.html">🔧 Приладдя: патрони, прицілы, магазини →</a>
+  <a class="nav-link" href="accessories.html">🔧 Приспособления: патроны, прицелы, магазины →</a>
 </header>
 <div class="container">
   <div class="cat-filter">
@@ -189,7 +189,7 @@ footer.site{text-align:center; color:var(--muted); font-size:.8rem; padding:20px
   </div>
   <div class="controls">
     <input type="text" id="search" placeholder="Поиск по названию или категории...">
-    <span class="count">Показано: <span id="count">53 з 53</span></span>
+    <span class="count">Показано: <span id="count">53 из 53</span></span>
   </div>
   <table class="weapon-list">
     <thead>
@@ -827,7 +827,7 @@ function applyFilters(){
     if(match) visible++;
   });
   var countEl = document.getElementById('count');
-  if(countEl) countEl.textContent = visible + ' з ' + rows.length;
+  if(countEl) countEl.textContent = visible + ' из ' + rows.length;
 }
 
 if(searchBox){
