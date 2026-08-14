@@ -159,14 +159,30 @@ a.module-card:hover{border-color:var(--accent); text-decoration:none;}
 .compat-chip img{width:28px; height:28px; object-fit:contain; border-radius:50%; background:#0f0f0c;}
 
 footer.site{text-align:center; color:var(--muted); font-size:.8rem; padding:20px; border-top:1px solid var(--border);}
+
+nav.topnav{
+  background:var(--panel); border-bottom:1px solid var(--border);
+  display:flex; gap:4px; padding:10px 24px; flex-wrap:wrap;
+  position:sticky; top:0; z-index:10;
+}
+nav.topnav a{
+  color:var(--text); padding:8px 16px; border-radius:6px;
+  font-size:.9rem; font-weight:600; text-decoration:none; transition:background .15s,color .15s;
+}
+nav.topnav a:hover{background:#2c2c20; color:var(--link); text-decoration:none;}
 </style>
 </head>
 <body>
 <header class="site">
   <h1>Магазин для CR-61</h1>
   <div class="sub">DayZ - Оружие · Модуль / приспособление</div>
-  <a class="nav-link" style="display:block;margin-top:8px;font-size:.85rem;" href="../accessories.html">🔧 Приспособления →</a>
-
+  </header>
+<nav class="topnav">
+  <a href="../index.html">Оружие</a>
+  <a href="../accessories.html?cat=Калибр">Патроны</a>
+  <a href="../accessories.html?cat=Прицелы">Прицелы</a>
+  <a href="../accessories.html?cat=Магазины">Магазины</a>
+</nav>
 <div class="container">
   <a class="back-link" href="../index.html">← Ко всему списку оружия</a>
 

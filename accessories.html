@@ -67,6 +67,17 @@ header.site .nav-link{margin-top:8px; display:inline-block; font-size:.9rem;}
 }
 .compat-chip:hover{border-color:var(--accent); text-decoration:none;}
 footer.site{text-align:center; color:var(--muted); font-size:.8rem; padding:20px; border-top:1px solid var(--border);}
+
+nav.topnav{
+  background:var(--panel); border-bottom:1px solid var(--border);
+  display:flex; gap:4px; padding:10px 24px; flex-wrap:wrap;
+  position:sticky; top:0; z-index:10;
+}
+nav.topnav a{
+  color:var(--text); padding:8px 16px; border-radius:6px;
+  font-size:.9rem; font-weight:600; text-decoration:none; transition:background .15s,color .15s;
+}
+nav.topnav a:hover{background:#2c2c20; color:var(--link); text-decoration:none;}
 </style>
 </head>
 <body>
@@ -74,6 +85,12 @@ footer.site{text-align:center; color:var(--muted); font-size:.8rem; padding:20px
   <h1>Приспособления</h1>
   <div class="sub">93 единиц — патроны, прицелы, магазины, и с каким оружием они совместимы</div>
 </header>
+<nav class="topnav">
+  <a href="index.html">Оружие</a>
+  <a href="accessories.html?cat=Калибр">Патроны</a>
+  <a href="accessories.html?cat=Прицелы">Прицелы</a>
+  <a href="accessories.html?cat=Магазины">Магазины</a>
+</nav>
 <div class="container">
   <a class="back-link" href="index.html">← Ко всему оружию</a>
 
@@ -1423,6 +1440,12 @@ chips.forEach(chip => {
   });
 });
 search.addEventListener('input', applyFilter);
+
+const urlCat = new URLSearchParams(location.search).get('cat');
+if (urlCat && chips.some(c => c.dataset.cat === urlCat)) {
+  chips.forEach(c => c.classList.toggle('active', c.dataset.cat === urlCat));
+  activeCat = urlCat;
+}
 applyFilter();
 </script>
 </body>
